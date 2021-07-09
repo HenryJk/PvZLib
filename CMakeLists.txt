@@ -11,6 +11,7 @@ set(source_files
         include/pvz_button.h
         include/pvz_card.h
         include/pvz_cardselectionui.h
+        include/pvz_cheat.h
         include/pvz_cursor.h
         include/pvz_enum.h
         include/pvz_floatingitem.h
@@ -26,6 +27,7 @@ set(source_files
         include/pvz_seedslot.h
         include/pvz_zombie.h
         src/pvz_base.cpp
+        src/pvz_cheat.cpp
         src/pvz_hook.cpp
         src/pvz_pregameui.cpp
         )

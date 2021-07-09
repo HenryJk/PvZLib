@@ -3,6 +3,7 @@
 #include "pvz_game.h"
 
 namespace pvz {
-    void RegisterTickEventHook(void (*handler)(Game *));
-    void RegisterZombieCreatedHook(void (*handler)(pvz::Zombie *));
+    void RegisterOnTickHook(void (*handler)(Game *));
+    void RegisterOnZombieCreatedHook(void (*handler)(pvz::Zombie *));
+    void DisableAllHooks();
 }
