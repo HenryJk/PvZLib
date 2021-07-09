@@ -1,0 +1,713 @@
+┌6A9EC0\\ base address
+├┬64\\ text pointer (+28 next)
+│└─28\\File path
+├─D0\\[double floating point] volume
+├─D8\\[double floating point] sound effect
+├┬320\\mouse and window
+│└┬─28\\ Constantly increasing value
+│ ├─84\\[logical value] true if the game window is focused
+│ ├─88\\The top level of the current game [window]
+│ ├─8C\\ [window] currently held by the mouse
+│ ├─90\\[window] where the mouse is currently located
+│ ├┬94\\The top layer in the game [window]
+│ │├─C\\window type (1 pictorial, 2 pause, 3 whether, 4 shop, etc., 6 user management, 8 menu)
+│ │├─28\\existence time
+│ │├─30\\ abscissa
+│ │├─34\\ ordinate
+│ │├─38\\Horizontal length
+│ │├─38\\Longitudinal height
+│ │├─54\\[logical value]true is displayed
+│ │├┬60\\text color
+│ ││├─0\\[extended color array] title color
+│ ││└─10\\[extended color array] content color
+│ │├─90\\When the window is a button, it means the button text content
+│ │├─A0\\When the window is a button, it indicates the length of the button text
+│ │├─A4\\[Chinese version GB2312 code/English version ASCII code] title text, when the window is a button, it means the upper limit of the button text length
+│ │├─B4\\ Title text length
+│ │├─B8\\Maximum length of title text
+│ │├┬DC\\text pointer
+│ ││└─0\\[Chinese version GB2312 code/English version ASCII code] content text code
+│ │├─EC\\content text length
+│ │├─F0\\Maximum length of content text
+│ │├─15C\\ sub[window]+160,+164, etc. can all be sub-windows
+│ │├─164\\When the window is the shop interface, it means the time of entering the shop
+│ │├─180\\When the window is the picture book interface, it indicates the contents of the picture book (0 index, 1 plant, 2 zombies)
+│ │├─184\\When the window is a shop interface, it means that the shop prompt disappears and counts down
+│ │├─18C\\ When the window is the shop interface, it means that the new prompt of the shop appears countdown
+│ │├─194\\When the window is the picture book or shop interface, it indicates the plant number of the picture book or the current page number of the shop
+│ │├─198\\When the window is a picture book or shop interface, it indicates the serial number of the picture book zombie or the item currently viewed in the shop
+│ │├─19C\\ When the window is the picture book interface, it means the plant currently displayed in the picture book, and when the window is the shop interface, it means the countdown is completed when the shop page is turned
+│ │└─1A0\\When the window is the picture book interface, it means the zombie currently displayed in the picture book
+│ ├─DC\\[logical value] true when the mouse is in the screen (pause and still record)
+│ ├─E0\\ mouse abscissa (pause and still record)
+│ ├─E4\\Mouse ordinate (pause and still record)
+│ ├─E8\\ Mouse hold (pause and still record, 1 is the left button, 2 is the right button, 3 is the left and right button, 4 is the middle button, 5 is the left middle button, 6 is the right middle button, 7 is the left middle right button )
+│ ├─EC\\ the same as [E8]
+│ └─F0\\Mouse movement value is rewritten to the value of [28]
+├┬768\\Current game information and objects
+│├┬─28\\level timing
+││├─30\\ screen abscissa (increasing to the left, 0 in normal games)
+││├─34\\ screen ordinate (increase downward, 0 in normal game)
+││├─38\\clickable abscissa range
+││├─3C\\ Clickable ordinate range
+││├─54\\[logical value]true to display the screen
+││├─58\\[logical value] true when the mouse is pressed (0 when paused and no longer record)
+││├─59\\[logical value] true when the mouse is in the screen (0 when paused and no longer record)
+││├─8C\\[pointer]=base address
+││└┬90\\zombie object sequence, +15C next
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\ The abscissa of the image
+││ ├─C\\ the ordinate of the image
+││ ├─18\\[logical value] is invisible when false
+││ ├─1C\\ line number
+││ ├─20\\image layer
+││ ├─24\\zombie type
+││ ├─28\\zombie state
+││ ├─2C\\[floating point] abscissa
+││ ├─30\\[floating point] ordinate
+││ ├─34\\[float] animation speed (direct movement speed for zomboni and disco, otherwise don't have any effect when changed manually)
+││ ├─38\\ keep increasing until the value greater than [40]*[44] returns to 0
+││ ├─3C\\ Initial value range of countdown for zombie shouting brains [500,1500)
+││ ├─51\\[logical value] true when nibbling
+││ ├─54\\Zombie flash countdown
+││ ├─60\\zombies existed time
+││ ├─64\\zombie movement status (6 climbing ladder, 7 dropping after ladder, the rest unknown)
+││ ├─68\\ ability countdown (used by disco, pogo, bungee, catapult, jack)
+││ ├─6C\\ standing state, stand still at -2/-3, up at -4 (for zombies in the card interface)
+││ ├─70\0 when the snowman can not drop diamonds
+││ ├─74\\ Countdown to the disappearance of zombies
+││ ├─7C\\ column where the ladder is located
+││ ├─80\\ column where the bungee zombies are located
+││ ├─84\\[floating point][30] change amount (used by pogo)
+││ ├─8C\\ abscissa of shot determination
+││ ├─90\\ The ordinate of the shot determination
+││ ├─94\\ horizontal width determined by shot
+││ ├─98\\ Vertical height determined by shot
+││ ├─9C\\ abscissa of attack determination
+││ ├─A0\\The ordinate of attack determination
+││ ├─A4\\The horizontal width of the attack judgment
+││ ├─A8\\The vertical height of the attack judgment
+││ ├─AC\\ deceleration countdown
+││ ├─B0\\ Butter fixed countdown
+││ ├─B4\\Freeze countdown
+││ ├─B8\\[logical value] is true if charmed
+││ ├─B9\\[logical value] is true when blown away
+││ ├─BA\\[logical value] ??? if false then slowly losing health
+││ ├─BB\\[logical value] true if the hand is not broken
+││ ├─BC\\[logical value] There is a hand-held object (used by pole-vault, pogo, digger, yeti, gargantuar)
+││ ├─BD\\[logical value] is true in water
+││ ├─BE\\[1byte] Follow the shadow when going up the ladder
+││ ├─BF\\[logical value] true if you eat garlic
+││ ├─C0\\Countdown after eating garlic
+││ ├─C4\\1 type jewelry (0 no, 1 cone, 2 bucket, 3 rugby, 4 miner's hat, 7 sled car, 8 nuts, 9 high nuts)
+││ ├─C8\\Current body HP
+││ ├─CC\\ body upper limit
+││ ├─D0\\1 type jewelry current HP
+││ ├─D4\\1 type jewelry HP limit
+││ ├─D8\\2 type jewelry (0 none, 1 screen door, 2 newspaper, 3 ladder, 4 pickaxe)
+││ ├─DC\\2 category jewelry current HP
+││ ├─E0\\2 type jewelry upper limit of HP
+││ ├─E4\\balloon HP
+││ ├─E8\\balloon HP limit
+││ ├─EC\\[logical value] is true if it disappears
+││ ├─F0\\[int[4]] bobsled team leader have ID of other 3 bobsled team starting at offset 1, non-leader have only leader ID at offset 0
+││ ├─110\\ The number of the attachment of the bullet attacked animation
+││ ├─114\\Zombie King puts zombies countdown, the remaining basketball
+││ ├─118\\Zombie animation number
+││ ├─11C\\[float] size
+││ ├─120\\[floating point][+84] change amount (jumping process of jumping) ??? unused?
+││ ├─ 124 \ \ Motion speed of the dead king
+││ ├─128\\Plant in the bungee hand
+││ ├─12C\\ Whether the dead king smashed the car
+││ ├─130\\The number of rows where the zombie king releases zombies
+││ ├─134\\ countdown to the dead king's tricks
+││ ├─ 138 \ \The dead king stomping countdown
+││ ├─13C\\ countdown to the dead king stretched his head
+││ ├─ 140 \ \ Zong Wang Ice Fire Ball Animation
+││ ├─144\\ head animation of plant zombies
+││ ├─148\\ The number of rows of the dead king ice and fireball
+││ ├─14C\\ ball type, ice hockey is 0
+││ └─158\\zombie number
+│├┬─94\\Maximum number of zombies
+││├─98\\Maximum number of zombies
+││├─9C\\The number of the next zombie
+││├─A0\\Current number of zombies
+││├─A4\\The last zombie number
+││└┬A8\\Text pointer
+││ └─0\\zombies
+│├─┬AC\\plant attributes (+14C next)
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\ Plant abscissa
+││ ├─C\\plant ordinate
+││ ├─18\\[logical value] is visible when true
+││ ├─1C\\ line number
+││ ├─20\\image layer
+││ ├─24\\plant type
+││ ├─28\\ number of columns
+││ ├─3C\\plant state
+││ ├─40\\Current HP
+││ ├─44\\High blood limit
+││ ├─48\\ is 1, you can attack
+││ ├─4C\\ countdown to disappearance of clover
+││ ├─50\\ explosion countdown (cherry, ice, doom, jalapeno, coffee)
+││ ├─54\\Attribute countdown (used for chomper, cob cannon, spikeweed, spikerock, grave buster, potato mine, magnets, squash, imitater)
+││ ├─58\\Launch bullets\Countdown to production items (used by sunflower, marigold, all shooter plant, for shooters bullet created after [90] countdown)
+││ ├─5C\\ firing bullets\ production item time interval (actual interval is a bit RNG)
+││ ├─80\\ cob cannon target xpos (center-47)
+││ ├─84\\ cob cannon target ypos (center)
+││ ├─88\\'s line (same as 1C)
+││ ├─8C\\ particle system number (large spray mushroom and melancholic mushroom spray, garden plants glow)
+││ ├─90\\ bullet launch countdown (used by shooting plant and cob cannon, bullet created on 0)
+││ ├─94\\Plant animation number
+││ ├─98\\Plant animation number 2
+││ ├─9C\\ The animation number of the middle head of the three-line shooter
+││ ├─A0\\The animation number of the lower head of the three-line shooter
+││ ├─A4\\ blink animation number
+││ ├─A8\\ potato lightning flashing light animation number
+││ ├─AC \ \ Mushroom sleeping animation number
+││ ├─B0\\ blink countdown
+││ ├─B4 \\ unknown countdown, set back to 50 every 4 tick when zombie is biting it
+││ ├─B8 \ \ Luminous countdown
+││ ├─BC\\Flash countdown
+││ ├─C0\\[floating point] image offset coordinate to the right
+││ ├─C4\\[floating point] image offset coordinate downward
+││ ├─C8\\[floating point] abscissa of absorbent articles (used by magnet-shroom)
+││ ├─CC\\[floating point] ordinate of absorbent articles (used by magnet-shroom)
+││ ├─D0\\[floating point] the lateral offset of the target position of the absorbent article (used by magnet-shroom)
+││ ├─D4\\[floating point] the longitudinal offset of the target position of the absorbent article (used by magnet-shroom)
+││ ├─D8\\Magnetic mushroom sucking item type, the first item absorbed by the magnet
+││ ├─DC~128\\The remaining 4 items absorbed by the magnet
+││ ├─130\\ mushroom wakeup countdown (after getting coffee)
+││ ├─134\\1 is invisible and can be bitten, 2 is not
+││ ├─138\\ Imitater type (used by imitater to mark the plant it is transforming into)
+││ ├─13C\\ direction -1 is right, 1 is left
+││ ├─140\\[1 byte] Conversion between 0 and 1
+││ ├─141\\[logical value]true means the plant disappears
+││ ├─142\\[logical value]true means the plant is squashed
+││ ├─143\\[logical value]true means the plant falls asleep
+││ ├─144\\[logical value]true, plants can shine (??? zen garden related?)
+││ ├─145\\[logical value]true, the plant is flashing
+││ └─148\\plant number
+│├┬─B0\\Maximum number of plants
+││├─B4\\Maximum number of plants
+││├─B8\\The number of the next plant
+││├─BC\\Current number of plants
+││├─C0\\Last plant number
+││└┬C4\\Text pointer
+││ └─0\\plants
+│├─┬C8\\Bullet attributes (+94 next)
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\Image X coordinate = rounding [30]
+││ ├─C\\image Y coordinate = rounding ([34]+[38])
+││ ├─18\\[logical value] displays bullets when true
+││ ├─1C\\ line number
+││ ├─20\\image layer
+││ ├─24\\Longitudinal offset of the area where the bullet is located
+││ ├─30\\[floating point] shadow X coordinate
+││ ├─34\\[floating point] image Y coordinate
+││ ├─38\\[floating point][34],[4C] delta
+││ ├─3C\\[floating point][30] delta
+││ ├─40\\[floating point][34],[4C] delta
+││ ├─44\\[floating point][38] delta
+││ ├─48\\[floating point][44] delta
+││ ├─4C\\[floating point] shadow Y coordinate
+││ ├─50\\[logical value] true if the bullet disappears
+││ ├─58\\ movement type
+││ ├─5C\\ bullet type
+││ ├─60\\existence timing
+││ ├─64\\ self-decrement countdown
+││ ├─68\\[floating point] bullet rotation angle
+││ ├─6C\\[floating point] bullet rotation speed
+││ ├─70\\[logical value] true when the shadow moves down
+││ ├─74\\The conditions for the bullet to hit the target
+││ ├─7C\\ bullet animation object ID?
+││ ├─80\\[floating point] initial value of abscissa of gun drop
+││ ├─84\\The row of the gun target
+││ ├─88\\Target zombie number of cattail thorn
+││ └─90\\Bullet number
+│├┬─CC\\The number of bullets at maximum
+││├─D0\\Maximum number of bullets
+││├─D4\\The number of the next bullet
+││├─D8\\Current bullet count
+││├─DC\\ last bullet number
+││└┬E0\\text pointer
+││ └─0\\projectile
+│├─┬E4\\Item attributes (+D8 next)
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\Image X coordinate change
+││ ├─C\\Image Y coordinate change
+││ ├─10\\ Judgment width
+││ ├─14\\Judgment height
+││ ├─18\\[logical value]true means the item is invisible
+││ ├─20\\Layer
+││ ├─24\\[floating point] X coordinate
+││ ├─28\\[floating point] Y coordinate
+││ ├─2C\\[floating point] X coordinate change
+││ ├─30\\[floating point] Y coordinate change
+││ ├─34\\[floating point] size
+││ ├─38\\[logical value]true, the item disappears
+││ ├─3C\\[logical value]true, the item disappears
+││ ├─40\\ becomes [24] after collection
+││ ├─44\\ becomes [28] after collection
+││ ├─48\\ Y coordinate to move the item to
+││ ├─4C\\ Item existence time
+││ ├─50\\[logical value]true is collected
+││ ├─54\\ disappearing timing
+││ ├─58\\Item type (1 = silver, 2 = gold, 3 = diamond, 4 = sun, 5 = small sun, 6 = big sun, 7 = ???, 8 = trophy, 9 = shovel, 10 = almanac, 11 = car key, 12 = vase trophy ???, 16 = seed packet, 17 zen garden plant)
+││ ├─5C\\ Item movement status
+││ ├─60\\ Animation attachment number
+││ ├─68\\plant card type
+││ ├─70\\Flower pot plant type
+││ ├─C8\\[logical value]true has a halo
+││ ├─C9\\[logical value][C8] halo
+││ └─D4\\item number
+│├┬─E8\\Maximum number of items
+││├─EC\\ Maximum number of items
+││├─F0\\Next item number
+││├─F4\\Current number of items
+││├─F8\\The last item number
+││└┬FC\\text pointer
+││ └─0\\coins
+│├─┬100\\cart attributes (+48 next)
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\[floating point] X coordinate
+││ ├─C\\[floating point] X coordinate
+││ ├─10\\Layer
+││ ├─14\\ number of rows
+││ ├─2C\\ state
+││ ├─30\\[logical value] is true if it disappears
+││ ├─31\\[logical value] is invisible when false
+││ ├─34\\trolley type
+││ ├─38\\[floating point] Y coordinate offset
+││ ├─3C\\ shadow change
+││ └─44\\trolley number
+│├┬─104\\Number of carts at most
+││├─108\\Maximum number of trolleys
+││├─10C\\The next trolley number
+││├─110\\Current number of carts
+││├─114\\The last trolley number
+││└┬118\\Text pointer
+││ └─0\\lawnmowers
+│├─┬11C\\Venue item attributes (+EC next) (grave=1, crater=2, ladder=3, rake=11, brain=12 (for i, zombie), vase)
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\type
+││ ├─C\\ jar type (3,4,5)
+││ ├─10\\ number of columns
+││ ├─14\\ number of rows
+││ ├─18\\The amount of the tombstone, the countdown to the disappearance of the crater, the amount of brain hp, the countdown to the disappearance of the rake
+││ ├─1C\\Layer
+││ ├─20\\[logical value]true will disappear
+││ ├─24\\[floating point] snail X coordinate
+││ ├─28\\[floating point] snail/brain Y coordinate
+││ ├─2C\\[floating point] the X coordinate of the snail
+││ ├─30\\[floating point] the Y coordinate of the snail
+││ ├─34\\Animation number
+││ ├─38\\Particle system number
+││ ├─3C\\ The jar contains the serial number of the zombie
+││ ├─40\\The pot holds the serial number of the plant card
+││ ├─44\\ Jar content type (0,1,2,3)
+││ ├─48\\[logical value] is true if it is lit
+││ ├─4C\\ jar perspective countdown, iz brain brightness
+││ ├─50\\Sunshine
+││ ├─54~E0\\[floating point] After snails eat chocolate, 3 groups, 12 groups
+││ └─E8\\Venue item number
+│├┬─120\\Maximum venue items
+││├─128\\Next venue item number
+││├─12C\\ Current number of items in the venue
+││├─130\\Last venue item number
+││└┬134\\Text pointer
+││ └─0\\griditems
+│├─┬138\\Mouse related attributes
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\X coordinate
+││ ├─C\\Y coordinate
+││ ├─10\\80
+││ ├─14\\80
+││ ├─18\\[logical value] the mouse is true in the game interface
+││ ├─24\\The position of the plant on the mouse in the card slot
+││ ├─28\\Card serial number on the mouse
+││ ├─2C\\ imitator card serial number
+││ └─30\\ Cursor held item (0=empty, 1=plant, 2=sprout(zen garden), 6=shovel, 8=cob-cannon, 9=watering can, 10 = fertilizer)
+│├─┬13C\\Mouse extra attributes
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\The abscissa of the plant on the mouse
+││ ├─C\\The ordinate of the plant on the mouse
+││ ├─24\\mouse column
+││ └─28\\mouse line
+│├─┬140\\text attribute
+││ ├─0\\[pointer]=base address
+││ ├─4~84\\[Chinese version GB2312 code/English version ASCII code] content text code
+││ ├─84\\Initial value of disappearing countdown
+││ ├─88\\ countdown to disappear
+││ └─8C\\ text style
+│├─┬144\\Card slot attributes
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\X coordinate
+││ ├─C\\Y coordinate
+││ ├─10\\horizontal judgment
+││ ├─18\\[logical value]false means the card slot is invisible
+││ ├─24\\ number of cells
+││ ├The following is the card attribute +50 next grid starting from 28
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\ card X coordinate
+││ ├─C\\ card Y coordinate
+││ ├─10\\ Card judgment width
+││ ├─14\\ Card Judgment Height
+││ ├─18\\[logical value]false, the card is invisible
+││ ├─24\\cooling time (this number counting up instead of counting down)
+││ ├─28\\ total cooling time
+││ ├─2C\\card serial number
+││ ├─30\\ Card position in the conveyor belt
+││ ├─34\\Card slot content
+││ ├─38\\imitator content
+││ ├─3C\\Slot machine stop countdown
+││ ├─40\\The content transferred from the slot machine
+││ ├─44\\[floating point] slot machine rotation position
+││ ├─48\\[logical value]false is not available
+││ ├─49\\[logical value]true will light up when selected
+││ └─4C\\Number of times the card slot has been used
+│├──148\\Menu[Button] attribute
+│├─┬14C\\Last Stand[button] attribute
+││ ├─0\\[pointer]=base address
+││ ├─8\\X coordinate
+││ ├─C\\Y coordinate
+││ ├─10\\Button width
+││ ├─14\\ button height
+││ ├─18\\[logical value] is true when the mouse is on the button
+││ ├─19\\[logical value] true if the mouse button is held down
+││ ├─1A\\[logical value] button is not available, true
+││ ├─1C\\[extended color array] color
+││ ├─84\\[Chinese version GB2312 code/English version ASCII code] content text code
+││ ├─94\\ text length
+││ ├─98\\Maximum text length
+││ └─F9\\logical value] invisible is true
+│├──150\\[logical value]true, the mouse does not display the hand shape
+│├──154\\Pointer to mangled strings
+│├─┬15C\\ Card interface attributes
+││ ├─0\\[pointer]=base address
+││ ├─8\\ Horizontal shift of the screen
+││ ├─2C\\true then select the card to end and start the game
+││ ├─34\\[logical value]false, the card interface is invisible (no effect when changed)
+││ └─35\\[logical value]if switched to false, will generate additional zombie during card selection and switch back to true immediately
+│├─┬160\\ Bejeweled attributes
+││ ├─0\\[pointer]=base address
+││ ├─4\\[pointer]=current game information and objects
+││ ├─8\\[logical value]true is dragging plants in Bejeweled
+││ ├─C\\ the abscissa when the mouse clicks on the plant
+││ ├─10\\ mouse click on the ordinate of the plant
+││ ├─14~49\\[logical value]true, there is a crater
+││ ├─4A\\[logical value]true is upgraded to dual launcher
+││ ├─4B\\[logical value]true is upgraded to a big spray mushroom
+││ ├─4C\\[logical value]true is upgraded to high nuts
+││ ├─50\\ Eliminate the sunshine you get at one time
+││ ├─54\\ is not operable if it is greater than 3, and the level name will not be displayed at 8
+││ ├─58\\Various countdowns
+││ ├─60\\ level process
+││ └─6C\\ rounds of level
+│├──164\\[logical value]true to pause the game
+│├──168~23C\\scene terrain type (1=land, 2=unsodded, 3=water)
+│├──240~314\\The shape of the fog
+│├──4C8~5C0\\The concentration of fog
+│├──5D0\\[floating point] dense fog offset, clover fog distance
+│├──5D4\\ countdown to dense fog
+│├──5D8~5EC\\ Type of strange per line
+│├──60C~620\\ Coordinates of each ice track
+│├──624~638\\ countdown to the disappearance of each ice lane
+│├──63C~650\\Particle system number of each row of ice tunnel
+│├──6B4~54D0\\monster list (accommodating 10 flags)
+│├──54D4~54F4\\[1 byte] strange types
+│├──5538\\Countdown to falling sunlight
+│├──553C\\ Falling sunlight count
+│├──5540\\ If it is not 0, the screen will return to normal immediately
+│├──5544\\The amplitude of the horizontal vibration of the screen
+│├──5548\\The amplitude of the vertical vibration of the screen
+│├──554C\\scene type
+│├──5550\\(adventure mode) current level
+│├──5558\\Mouse X coordinate
+│├──555C\\ mouse Y coordinate
+│├──5560\\Sunshine value
+│├──5564\\The total wave number of the current level
+│├──5568\\Game timing (not including the time to stay in the card selection)
+│├──556C\\Game timing (including the time to stay in the card selection)
+│├──5570\\Game timing (re-timing if the focus is lost)
+│├──5574\\ Countdown to a trio
+│├──557C\\ current wave number
+│├──5580\\ Wave number refreshed
+│├──5584\\ Flashing tips related to the novice tutorial
+│├──5594\\HP that reaches the refresh condition
+│├──5598\\ total blood volume of this wave
+│├──559C\\ Countdown to the next wave of zombies
+│├──55A0\\The initial value of [559C]
+│├──55A4\\ Big wave of zombie refresh countdown
+│├──55EC\\ 41 when there is a red letter
+│├──55F1\\[logical value]true when there is a shovel
+│├──55F4\\ Money display countdown
+│├──55F8\\Used for program debugging (only the original English version is valid)
+│├──55FC\\[logical value]true to exit the level
+│├──5600\\[logical value]true is the clearance process
+│├──5604\\ Countdown to exit the level
+│├──560C\\[logical value]true when it is in the pass state
+│├──5610\\The progress bar of the level process
+│├──5618\\Countdown to freezing water
+│├──561C\\ Survival mode has strange seeds, non-survival mode is the opening time of the program window
+│├──5620\\Particle system number
+│├──5624~5740\\ Pepper flame animation, 12 animations per line, 6 lines in total
+│├──5744\\ Pepper flame countdown
+│├──5748\\[logical value]true, the screen becomes white
+│├──5750\\ reduced to 0 to produce sound effects
+│├──5754\\ 30cs countdown after firing, during the countdown, firing position and cross-center distance cannot be less than 100
+│├──5758\\The abscissa of the shot position
+│├──575C\\ the ordinate of the shot position
+│├──5761\\[logical value] press mustache to be true
+│├──5762\\[logical value] press trickedout to be true
+│├──5763\\[logical value] press future to be true
+│├──5764\\[logical value] Press pinata to be true
+│├──5765\\[logical value] press dance to be true
+│├──5766\\[logical value] press daisies to be true
+│├──5767\\[logical value] press sukhbir to be true
+│├──5790\\Game start time (seconds from 1970-1-1 8:00)
+│├──5798\\Number of plants eaten
+│├──579C\\ Number of plants shoveled
+│├──57A0\\The number of gold coins collected
+│├──57A4\\Number of diamonds collected
+│├──57A8\\The number of flower pots collected
+│└──57AC\\Number of chocolates charged
+├┬774\\Select card interface attributes
+│├─88\\Rock [button]
+│├─8C\\(Debug Play)[button]
+│├─90\\View lawn [button]
+│├─94\\shop[button]
+│├─98\\Picture Book[button]
+│├─9C\\ menu [button]
+│├─A0\\Imitator [button]
+│├─A4\\ pea shooter plant card abscissa (+3C next)
+│├─A8\\The ordinate of the pea shooter plant card
+│├─B4\\The abscissa of the pea shooter plant card before the last move
+│├─B8\\ The ordinate before the last move of the Pea Archer plant card
+│├─BC\\The abscissa where the pea shooter plant card moved this time
+│├─C0\\The ordinate of the pea shooter plant card moved to this time
+│├─C4\\The corresponding plant of the Pea Archer Plant Card
+│├─C8\\ mobile state (0 moves to the card slot, 1 is in the card slot, 2 is moved down the card slot, 3 is in the card selection interface)
+│├─D8\\ imitater type (-1 if not selected)
+│├─DC\\ is Crazy Dave’s choice
+│└─D24\\ next seed slot index
+├─7F8\\ level number
+├─7FC\\Game status
+├─814\\[logical value]true to open the free planting mode
+├┬820\\Animation information
+│├┬0
+││├─0\\particle system (+2C next)
+││├─4\\Number of particle systems at maximum
+││├─8\\Maximum number of particle systems
+││├─C\\The number of the next particle system
+││├─10\\The current number of particle systems
+││├┬18\\text pointer
+│││└─0\\particle systems
+││├─1C\\ emission source (+B0 next)
+││├─20\\Number of emission sources at maximum
+││├─24\\Maximum number of emission sources
+││├─28\\The number of the next emission source
+││├─2C\\Current number of emission sources
+││├┬34\\text pointer
+│││└─0\\emitters
+││├─38\\ particles (+A0 next)
+││├─3C\\ the number of particles at maximum
+││├─40\\Maximum number of particles
+││├─44\\The number of the next particle
+││├─48\\Current number of particles
+││└┬50\\Text pointer
+││ └─0\\particles
+│├┬4\\track information
+││└┬18\\Text pointer
+││ └─0\\trails
+│├┬8
+││├┬0\\animation object (+A0 next)
+│││├─4\\[floating point] animation cycle rate
+│││├─8\\[floating point] animation speed
+│││├─10\\ Animation type (0 loop, 3 no loop, 5 blinks)
+│││├─14\\[logical value]true will disappear
+│││├─18\\From the first frame
+│││├─1C\\Number of key frames
+│││├─24\\[floating point] stretch left and right
+│││├─28\\[floating point] tilt left and right
+│││├─2C\\[floating point] abscissa offset
+│││├─30\\[floating point] tilt up and down
+│││├─34\\[floating point] up and down stretch
+│││├─38\\[floating point] ordinate offset
+│││├─48\\[extended color array] object color
+│││├─5C\\ Animation cycle times
+│││├─94\\[floating point][4] of the previous frame
+│││├─98\\coloring method-1,0,1,2
+│││└─9C\\Animation object number
+││├─4\\Number of animation objects at maximum
+││├─8\\Maximum number of animation objects
+││├─C\\ the number of the next animation object
+││├─10\\Current number of animation objects
+││└┬18\\Text pointer
+││ └─0\\reanims
+│└┬C
+│ ├┬0\\animation attachment (+30C next)
+│ │└─0\\Animation number
+│ ├─4\\Number of animation attachments at maximum
+│ ├─8\\Maximum number of animation attachments
+│ ├─C\\ the number of the next animation attachment
+│ ├─10\\Current number of animation attachments
+│ └┬18\\ text pointer
+│ └─0\\attachments
+├┬82C\\Archive information
+│└┬─4\\[ASCII code]User name
+│ ├─14\\user name length
+│ ├─18\\Maximum length of user name
+│ ├─1C\\ Number of user changes
+│ ├─20\\user serial number
+│ ├─24\\Current level of adventure mode
+│ ├─28\\The number of money (/10)
+│ ├─2C\\Adventure mode completed times
+│ ├─30~54\\ The number of flags completed in each level of survival mode
+│ ├─58~68\\ The highest record of each level in endless mode
+│ ├─6C~F0\\Completed times of each level of the mini game
+│ ├─F4\\Height of Wisdom Tree
+│ ├─F8~118\\ Times of completion of each level of smashing the jar
+│ ├─11C\\ smashing jar endless record
+│ ├─120~140\\I am a zombie
+│ ├─144\\ I am a zombie endless record
+│ ├─1C0~1DC\\[logical value] true if 8 purple cards are purchased
+│ ├─1E0\\[logical value] true if imitator purchases
+│ ├─1E8~1F0\\Purchase date of three marigolds (number of days since 2000-01-01)
+│ ├─1F4\\[logical value] true if the golden kettle has been bought
+│ ├─1F8\\ Flower fertilizer (-1000)
+│ ├─1FC\\ Insecticide (-1000)
+│ ├─200\\[logical value] true if the music box has been bought
+│ ├─204\\[logical value] true if the glove has been bought
+│ ├─208\\[logical value] true if the mushroom garden has been bought
+│ ├─20C\\[logical value] true if the cart has been bought
+│ ├─210\\[logical value] true if the snail has been bought
+│ ├─214\\Number of card slots bought
+│ ├─218\\[logical value] true if the pool cleaning cart has been bought
+│ ├─21C\\[logical value] true if the roof cleaning truck has been bought
+│ ├─220\\ leftover quantity of rake bought
+│ ├─224\\[logical value] true if the aquarium has been bought
+│ ├─228\\Chocolate (-1000)
+│ ├─22C\\[logical value] True if the wisdom tree has been bought
+│ ├─230\\tree fertilizer (-1000)
+│ ├─234\\[logical value] true if nut dressing has been bought
+│ ├─314\\Snail eating chocolate time
+│ ├─318\\ snail abscissa
+│ ├─31C\\ snail ordinate
+│ ├─350\\Number of flower pots in Zen garden
+│ ├The following are flowerpot attributes (+58 next)
+│ ├─8 types
+│ ├─C\\ location
+│ ├─10\\ number of columns
+│ ├─14\\ number of rows
+│ ├─18\\ direction
+│ ├─28\\color
+│ └─2C\\status
+├┬83C\\music
+│└┬─0\\[pointer]=base address
+│ ├─4\\[pointer]=[374]
+│ ├─8\\Current BGM type
+│ ├─C\\ recorded when the data is paused
+│ ├─10\\-1, the current bgm can increase the effect will become 2
+│ ├─14\\-1, it becomes 3 in the pool and the roof
+│ ├─18\\-1, 1 bgm increase effect, continuous, global effective (modifying this value has the best effect)
+│ ├─1C\\BPM (beats per minute)
+│ ├─20\\ticks/row
+│ ├─24\\Burst type (0 off, 1 start, 2 at least until..., 3 complete)
+│ ├─28\\ related countdown
+│ ├─2C\\Drums drum type (0 no, 1 fade in, 2 loaded, 3 fade out, 4 disappear)
+│ ├─34\\Drums drum progress
+│ ├─38[2 bytes]\\Music order
+│ ├─3A[2 bytes]\\Music row
+│ ├─3C[2 bytes]\\Drum order
+│ ├─3E[2 bytes]\\Drum row
+│ └─40[logical value]\\whether to pause
+└─8C0\\ Is it genuine
+
+69F1C8\\ Normal Pea Attack Power
+69F1D4\\ Ice Pea Attack Power
+69F1E0\\ Cabbage Attack Power
+69F1EC\\ normal watermelon attack power
+69F1F8\\ Spore attack power
+69F204\\ Ice Watermelon Attack Power
+69F210\\Fire Pea Attack Power
+69F21C\\Star Attack Power
+69F228\\Spiked Attack Power
+69F234\\Basketball Attack Power
+69F240\\ Corn kernel attack power
+69F258\\ Butter Attack Power
+69F264\\ Pea Zombie Attack Power
+69F2C0\\plant price (+24 next)
+69F2C4\\ Plant cooling time (+24 next)
+69F2CC\\Plant rate of fire (+24 next)
+6A3260\The target terrain of the nut level (+4 next grid)
+6A3338\\ The target terrain of the sunflower level (+4 next grid)
+6A3410\\ Look at the target terrain of the star level (+4 next grid)
+6A35B4\\Adventure mode 1-1 whether there are ordinary monsters (+CC next kind of zombie, +4 next level)
+If you want to modify the list, you have to modify the following two places first
+[40D6A3--jmp 40D6A8]
+[40D6AC--nop,nop]
+69DA88\\ Zombie level (+1C next)
+69DA94\\ Proportion of appearance of zombies (+1C next)
+422E2F\\[Disassembly Address] From here, the following are the plants of the various conveyor belts
+45DC55\The blood volume of general plants
+45E1A7\\ Nut HP
+45E215\\High Nut HP
+45E445\\ Pumpkin Head HP
+45E242\\ Garlic blood volume
+45E5C3\\Earth Stabbing King's HP
+5227BB\\ general zombie health
+522892\\Barricade Jewelry HP
+522CBF\\Strut Zombie HP
+52292B\\Iron Bucket Jewelry HP
+52337D\newspaper accessories blood volume
+522949\\Iron Gate Jewelry HP
+522BB0\\Rugby Jewelry HP
+523530\\Dance King Zombie HP
+522DE1\\ Ice Truck Zombie HP
+523139\\Sleigh Car Accessories HP
+522D64\\ Dolphin Zombie HP
+522FC7\\ Joker Zombie HP
+522BEF\Miner Zombie HP
+523300\\\Zombie HP
+52296E\\ Yeti Zombie HP
+522A1B\\Bungee Zombie HP
+52299C\\ Ladder Zombie HP
+522E8D\\ Catapult Zombie HP
+523D26\\ Giant Zombie HP
+523624\\Doctor Zombie HP
+52361E\\ The increased blood volume of Dr. Zombie in the mini game
+52382B\\ Nut Jewelry HP
+523A87\\ Pepper Corpse HP
+52395D\\ High Nut Jewelry HP
+523E4A\\ Red Eye Zombie HP
+5235AC\\ The HP of Imp Zombie in ize
+5234BF\Balloon Zombie’s Balloon HP
+532FDC\\ Ash Attack Power
+Note that there is a judgment that turns into ashes and ignores blood volume
+[532B96--cmp [esi+000000C8],00000708]
+41D931\\ Potato mine attack power
+4607A9\\Wogua attack power
+532493\\[1byte] Cold Ice Mushroom Attack Power
+4309F0\\ Ordinary Sunshine Value
+430A46\\Coin value
+4309FD\\[1 byte] Little Sunshine Value (-5)
+430A0D\\ Great Sunshine Value
+430A53\\[1 byte] gold coin value (/10-2)
+430A63\\[1 byte] diamond value (/10)
+467B1C\Bejeweled double hair and zombie aquarium trophy price
+467B27\\ The price of Bejeweled
+467B32\\ The high nut price of Bejeweled
+467B3D\\ Bejeweled spinning card and diving zombie price in the zombie aquarium
+467B48\\The price of the crater card of Bejeweled
+467B60~467B84\\iz's zombie card price (+6 next)
