@@ -1,5 +1,5 @@
 #include "pvz_base.h"
 
-static pvz::Base& GetInstance() {
+pvz::Base& pvz::Base::GetInstance() {
     return **(pvz::Base **)BASE_PTR_ADDRESS;
 }
