@@ -4,17 +4,8 @@ cmake_minimum_required(VERSION 3.19.2)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(pvz MODULE)
-target_compile_definitions(pvz PUBLIC VERSION=V_1_0_0_1051_EN)
-target_include_directories(pvz
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-target_sources(pvz
-        PUBLIC
+set(include_dir "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(source_files
         include/pvz.h
         include/pvz_base.h
         include/pvz_button.h
@@ -34,9 +25,15 @@ target_sources(pvz
         include/pvz_seedbank.h
         include/pvz_seedslot.h
         include/pvz_zombie.h
-
-        PRIVATE
         src/pvz_base.cpp
         src/pvz_hook.cpp
         src/pvz_pregameui.cpp
         )
+
+add_library(pvz_1_0_0_1051_en ${source_files})
+target_compile_definitions(pvz_1_0_0_1051_en PUBLIC VERSION=V_1_0_0_1051_EN)
+target_include_directories(pvz_1_0_0_1051_en PUBLIC ${include_dir})
+
+#add_library(pvz_1_2_0_1096_en ${source_files})
+#target_compile_definitions(pvz_1_2_0_1096_en PUBLIC VERSION=V_1_2_0_1096_EN)
+#target_include_directories(pvz_1_2_0_1096_en PUBLIC ${include_dir})
