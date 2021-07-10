@@ -37,7 +37,8 @@ void pvz::DisableNoDrop() {
 }
 
 void pvz::DisableAllCheats() {
-    pvz::DisableSpeedUnlock();
+    // always crashed when cleaning up this cheat, cheat has no effect in normal gameplay otherwise.
+    // pvz::DisableSpeedUnlock();
     pvz::DisableAutoCollect();
     pvz::DisableNoDrop();
 }
