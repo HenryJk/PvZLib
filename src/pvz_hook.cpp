@@ -60,7 +60,7 @@ void pvz::RegisterOnZombieCreatedHook(void (*handler)(pvz::Zombie *)) {
             GetCurrentProcess(), (void *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
 }
 
-void pvz::RegisterOnProjectileCollideHook(void (*handler)(Projectile *, Zombie *)) {
+void pvz::RegisterOnProjectileCollidedHook(void (*handler)(Projectile *, Zombie *)) {
     auto hook = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     hooks.push_back(hook);
     hook[0]                = 0x60; // pushad;
@@ -85,6 +85,31 @@ void pvz::RegisterOnProjectileCollideHook(void (*handler)(Projectile *, Zombie *
     SaveOriginalCode((uint8_t *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, sizeof(patch));
     WriteProcessMemory(
             GetCurrentProcess(), (void *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
+}
+
+void pvz::RegisterOnFrameRenderedHook(void (*handler)(IDirect3DDevice7 *)) {
+    auto hook = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    hooks.push_back(hook);
+    hook[0]                = 0x60; // pushad;
+    hook[1]                = 0x50; // push eax;
+    hook[2]                = 0xE8; // call handler;
+    (uintptr_t &) hook[3]  = (uintptr_t) handler - ((uintptr_t) hook + 7);
+    hook[7]                = 0x58; // pop eax;
+    hook[8]                = 0x61; // popad;
+    hook[9]                = 0x50; // push eax;
+    hook[10]               = 0xFF; // call edx;
+    hook[11]               = 0xD2;
+    hook[12]               = 0x6A; // push 0xFF;
+    hook[13]               = 0xFF;
+    hook[14]               = 0xE9; // jmp [ON_FRAME_RENDERED_INJECTION_ADDRESS + 5];
+    (uintptr_t &) hook[15] = (ON_FRAME_RENDERED_INJECTION_ADDRESS + 5) - ((uintptr_t) hook + 19);
+
+    uint8_t patch[5];
+    patch[0]               = 0xE9; // jmp [hook]
+    (uintptr_t &) patch[1] = (uintptr_t) hook - (ON_FRAME_RENDERED_INJECTION_ADDRESS + 5);
+    SaveOriginalCode((uint8_t *) ON_FRAME_RENDERED_INJECTION_ADDRESS, sizeof(patch));
+    WriteProcessMemory(
+            GetCurrentProcess(), (void *) ON_FRAME_RENDERED_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
 }
 
 void pvz::DisableAllHooks() {
