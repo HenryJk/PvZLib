@@ -29,6 +29,7 @@ namespace pvz {
             OF(uint32_t projectile_countdown, PLANT_PROJECTILE_COUNTDOWN_OFFSET);
             OF(uint32_t wakeup_countdown, PLANT_WAKEUP_COUNTDOWN_OFFSET);
             OF(PlantType imitater_type, PLANT_IMITATER_TYPE_OFFSET);
+            OF(bool is_disappearing, PLANT_IS_DISAPPEARING_OFFSET);
             OF(bool is_squashed, PLANT_IS_SQUASHED_OFFSET);
             OF(bool is_sleeping, PLANT_IS_SLEEPING_OFFSET);
             OF(uint32_t id, PLANT_ID_OFFSET);

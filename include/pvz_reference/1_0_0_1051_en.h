@@ -141,6 +141,7 @@
 #define PLANT_PROJECTILE_COUNTDOWN_OFFSET            0x90
 #define PLANT_WAKEUP_COUNTDOWN_OFFSET                0x130
 #define PLANT_IMITATER_TYPE_OFFSET                   0x138
+#define PLANT_IS_DISAPPEARING_OFFSET                 0x141
 #define PLANT_IS_SQUASHED_OFFSET                     0x142
 #define PLANT_IS_SLEEPING_OFFSET                     0x143
 #define PLANT_ID_OFFSET                              0x148
