@@ -13,9 +13,10 @@ namespace pvz {
             OF(uint32_t row_index, PROJECTILE_ROW_INDEX_OFFSET);
             OF(uint32_t xpos, PROJECTILE_XPOS_OFFSET);
             OF(uint32_t ypos, PROJECTILE_YPOS_OFFSET);
-            OF(bool is_colliding, PROJECTILE_IS_COLLIDING_OFFSET);
+            OF(ProjectileType type, PROJECTILE_TYPE_OFFSET);
+            OF(bool can_collide, PROJECTILE_CAN_COLLIDE_OFFSET);
             OF(uint32_t cattail_target_id, PROJECTILE_CATTAIL_TARGET_ID_OFFSET);
             OF(uint32_t id, PROJECTILE_ID_OFFSET);
         };
     };
-}
+} // namespace pvz

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "pvz_reference.h"
 #include "pvz_enum.h"
+#include "pvz_reference.h"
+
 #include <cstdint>
 
 namespace pvz {
@@ -17,4 +18,4 @@ namespace pvz {
             OF(bool is_enforced, CARD_IS_ENFORCED_OFFSET);
         };
     };
-}
+} // namespace pvz

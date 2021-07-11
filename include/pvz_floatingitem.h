@@ -21,4 +21,4 @@ namespace pvz {
             OF(uint32_t id, FLOATING_ITEM_ID_OFFSET);
         };
     };
-}
+} // namespace pvz

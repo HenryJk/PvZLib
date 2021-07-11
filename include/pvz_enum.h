@@ -116,6 +116,23 @@ namespace pvz {
         kReverseRepeater = 52,
     };
 
+    enum class ProjectileType : uint32_t {
+        kPea          = 0,
+        kSnowPea      = 1,
+        kCabbage      = 2,
+        kMelon        = 3,
+        kSpore        = 4,
+        kWinterMelon  = 5,
+        kFirePea      = 6,
+        kStar         = 7,
+        kSpike        = 8,
+        kBasketBall   = 9,
+        kKernel       = 10,
+        kCob          = 11,
+        kButter       = 12,
+        kZombotanyPea = 13,
+    };
+
     enum class FloatingItemType : uint32_t {
         kNone           = 0,
         kSilverCoin     = 1,

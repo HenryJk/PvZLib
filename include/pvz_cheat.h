@@ -23,4 +23,4 @@ namespace pvz {
     void DisablePlantInvincible();
 
     void DisableAllCheats();
-}
+} // namespace pvz

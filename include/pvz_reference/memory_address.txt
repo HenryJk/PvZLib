@@ -93,7 +93,7 @@
 ││ ├─B4\\Freeze countdown
 ││ ├─B8\\[logical value] is true if charmed
 ││ ├─B9\\[logical value] is true when blown away
-││ ├─BA\\[logical value] ??? if false then slowly losing health
+││ ├─BA\\[logical value] has_head if false then losing 1 health on random tick (20%), zombie will lose head if last attack make body health below 33.3%
 ││ ├─BB\\[logical value] true if the hand is not broken
 ││ ├─BC\\[logical value] There is a hand-held object (used by pole-vault, pogo, digger, yeti, gargantuar)
 ││ ├─BD\\[logical value] is true in water

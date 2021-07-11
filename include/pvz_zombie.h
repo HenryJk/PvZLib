@@ -29,6 +29,7 @@ namespace pvz {
             OF(uint32_t freeze_countdown, ZOMBIE_FREEZE_COUNTDOWN_OFFSET);
             OF(bool is_hypnotized, ZOMBIE_IS_HYPNOTIZED_OFFSET);
             OF(bool is_blown, ZOMBIE_IS_BLOWN_OFFSET);
+            OF(bool has_head, ZOMBIE_HAS_HEAD_OFFSET);
             OF(bool has_consumable, ZOMBIE_HAS_CONSUMABLE_OFFSET);
             OF(bool is_swimming, ZOMBIE_IS_SWIMMING_OFFSET);
             OF(bool is_climbing, ZOMBIE_IS_CLIMBING_OFFSET);

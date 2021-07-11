@@ -14,6 +14,8 @@
 #define LETS_ROCK_FUNC_ADDRESS                       0x486D20
 #define CLICK_SCREEN_FUNC_ADDRESS                    0x539390
 #define ON_ZOMBIE_CREATED_INJECTION_ADDRESS          0x524038
+#define ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS      0x46E000
+
 #define BASE_PTR_ADDRESS                             0x6A9EC0
 
 #define SPEED_UNLOCK_INJECTION_ADDRESS               0x551DBF
@@ -101,6 +103,7 @@
 #define ZOMBIE_FREEZE_COUNTDOWN_OFFSET               0xB4
 #define ZOMBIE_IS_HYPNOTIZED_OFFSET                  0xB8
 #define ZOMBIE_IS_BLOWN_OFFSET                       0xB9
+#define ZOMBIE_HAS_HEAD_OFFSET                       0xBA
 #define ZOMBIE_HAS_CONSUMABLE_OFFSET                 0xBC
 #define ZOMBIE_IS_SWIMMING_OFFSET                    0xBD
 #define ZOMBIE_IS_CLIMBING_OFFSET                    0xBE
@@ -147,7 +150,8 @@
 #define PROJECTILE_ROW_INDEX_OFFSET                  0x1C
 #define PROJECTILE_XPOS_OFFSET                       0x30
 #define PROJECTILE_YPOS_OFFSET                       0x34
-#define PROJECTILE_IS_COLLIDING_OFFSET               0x74
+#define PROJECTILE_TYPE_OFFSET                       0x5C
+#define PROJECTILE_CAN_COLLIDE_OFFSET                0x74
 #define PROJECTILE_CATTAIL_TARGET_ID_OFFSET          0x88
 #define PROJECTILE_ID_OFFSET                         0x90
 

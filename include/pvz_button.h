@@ -15,4 +15,4 @@ namespace pvz {
             OF(bool is_hidden, BUTTON_IS_HIDDEN_OFFSET);
         };
     };
-}
+} // namespace pvz

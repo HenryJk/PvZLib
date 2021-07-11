@@ -28,7 +28,8 @@ void pvz::RegisterOnTickHook(void (*handler)(Game *)) {
     uint8_t patch[5];
     patch[0]               = 0xE8; // call [hook]
     (uintptr_t &) patch[1] = (uintptr_t) hook - (MAIN_LOOP_CALL_ADDRESS + 5);
-    WriteProcessMemory(GetCurrentProcess(), (void *) MAIN_LOOP_CALL_ADDRESS, patch, 5, nullptr);
+    SaveOriginalCode((uint8_t *) MAIN_LOOP_CALL_ADDRESS, sizeof(patch));
+    WriteProcessMemory(GetCurrentProcess(), (void *) MAIN_LOOP_CALL_ADDRESS, patch, sizeof(patch), nullptr);
 }
 
 void pvz::RegisterOnZombieCreatedHook(void (*handler)(pvz::Zombie *)) {
@@ -54,7 +55,36 @@ void pvz::RegisterOnZombieCreatedHook(void (*handler)(pvz::Zombie *)) {
     uint8_t patch[5];
     patch[0]               = 0xE9; // jmp [hook]
     (uintptr_t &) patch[1] = (uintptr_t) hook - (ON_ZOMBIE_CREATED_INJECTION_ADDRESS + 5);
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, patch, 5, nullptr);
+    SaveOriginalCode((uint8_t *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, sizeof(patch));
+    WriteProcessMemory(
+            GetCurrentProcess(), (void *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
+}
+
+void pvz::RegisterOnProjectileCollideHook(void (*handler)(Projectile *, Zombie *)) {
+    auto hook = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    hooks.push_back(hook);
+    hook[0]                = 0x60; // pushad;
+    hook[1]                = 0x50; // push eax;
+    hook[2]                = 0x51; // push ecx;
+    hook[3]                = 0xE8; // call handler;
+    (uintptr_t &) hook[4]  = (uintptr_t) handler - ((uintptr_t) hook + 8);
+    hook[8]                = 0x59; // pop ecx;
+    hook[9]                = 0x58; // pop eax;
+    hook[10]               = 0x61; // popad;
+    hook[11]               = 0x83; // sub esp, 0x14;
+    hook[12]               = 0xEC;
+    hook[13]               = 0x14;
+    hook[14]               = 0x53; // push ebx;
+    hook[15]               = 0x55; // push ebp;
+    hook[16]               = 0xE9; // jmp [ON_ZOMBIE_HIT_INJECTION_ADDRESS + 5];
+    (uintptr_t &) hook[17] = (ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS + 5) - ((uintptr_t) hook + 21);
+
+    uint8_t patch[5];
+    patch[0]               = 0xE9; // jmp [hook]
+    (uintptr_t &) patch[1] = (uintptr_t) hook - (ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS + 5);
+    SaveOriginalCode((uint8_t *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, sizeof(patch));
+    WriteProcessMemory(
+            GetCurrentProcess(), (void *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
 }
 
 void pvz::DisableAllHooks() {
