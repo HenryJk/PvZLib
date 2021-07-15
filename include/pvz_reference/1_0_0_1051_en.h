@@ -13,11 +13,21 @@
 #define LAUNCH_COB_FUNC_ADDRESS                      0x466D50
 #define LETS_ROCK_FUNC_ADDRESS                       0x486D20
 #define CLICK_SCREEN_FUNC_ADDRESS                    0x539390
+
+#define ON_TICK_INJECTION_ADDRESS                    0x4130d0
 #define ON_ZOMBIE_CREATED_INJECTION_ADDRESS          0x524038
+#define ON_PLANT_BITTEN_INJECTION_ADDRESS            0x52FB91
+#define ON_PLANT_CRUSHED_INJECTION_ADDRESS           0x462B80
+#define ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS       0x45EC00
+#define ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS     0x45EE01
+#define ON_PLANT_REMOVED_INJECTION_ADDRESS           0x4679B0
 #define ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS      0x46E000
+#define ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS      0x46D793
 #define ON_FRAME_RENDERED_INJECTION_ADDRESS          0x568ECE
 
 #define BASE_PTR_ADDRESS                             0x6A9EC0
+
+// Cheats
 
 #define SPEED_UNLOCK_INJECTION_ADDRESS               0x551DBF
 #define SPEED_UNLOCK_CHEAT_CODE                      {0x90, 0x90};
@@ -30,6 +40,18 @@
 #define NO_DROP_INJECTION_ADDRESS                    0x41D025
 #define NO_DROP_CHEAT_CODE                           {0x90, 0xE9};
 #define NO_DROP_ORIGINAL_CODE                        {0x0F, 0x8F};
+
+#define BACKGROUND_RUNNING_INJECTION_ADDRESS         0x54EBA8
+#define BACKGROUND_RUNNING_CHEAT_CODE                {0xEB, 0x00};
+#define BACKGROUND_RUNNING_ORIGINAL_CODE             {0x74, 0x2E};
+
+#define NO_DELETE_USERDATA_INJECTION_ADDRESS         0x54b267
+#define NO_DELETE_USERDATA_CHEAT_CODE                {0x70};
+#define NO_DELETE_USERDATA_ORIGINAL_CODE             {0x74};
+
+#define NO_SAVE_USERDATA_INJECTION_ADDRESS           0x482149
+#define NO_SAVE_USERDATA_CHEAT_CODE                  {0x2E, 0x8B, 0x0C, 0x00};
+#define NO_SAVE_USERDATA_ORIGINAL_CODE               {0x13, 0x8B, 0x0C, 0x00};
 
 // Base object structure
 #define BASE_MUSIC_VOLUME_OFFSET                     0xD0
@@ -142,7 +164,7 @@
 #define PLANT_WAKEUP_COUNTDOWN_OFFSET                0x130
 #define PLANT_IMITATER_TYPE_OFFSET                   0x138
 #define PLANT_IS_DISAPPEARING_OFFSET                 0x141
-#define PLANT_IS_SQUASHED_OFFSET                     0x142
+#define PLANT_IS_CRUSHED_OFFSET                      0x142
 #define PLANT_IS_SLEEPING_OFFSET                     0x143
 #define PLANT_ID_OFFSET                              0x148
 

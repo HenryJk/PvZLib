@@ -16,8 +16,8 @@ namespace pvz {
             OF(PlantType type, PLANT_TYPE_OFFSET);
             OF(uint32_t column_index, PLANT_COLUMN_INDEX_OFFSET);
             OF(uint32_t state, PlANT_STATE_OFFSET);
-            OF(uint32_t hp, PLANT_HP_OFFSET);
-            OF(uint32_t max_hp, PLANT_MAX_HP_OFFSET);
+            OF(int32_t hp, PLANT_HP_OFFSET);
+            OF(int32_t max_hp, PLANT_MAX_HP_OFFSET);
             OF(bool is_shooter, PLANT_IS_SHOOTER_OFFSET);
             OF(uint32_t explosion_countdown, PLANT_EXPLOSION_COUNTDOWN_OFFSET);
             OF(uint32_t ability_countdown, PLANT_ABILITY_COUNTDOWN_OFFSET);
@@ -30,7 +30,7 @@ namespace pvz {
             OF(uint32_t wakeup_countdown, PLANT_WAKEUP_COUNTDOWN_OFFSET);
             OF(PlantType imitater_type, PLANT_IMITATER_TYPE_OFFSET);
             OF(bool is_disappearing, PLANT_IS_DISAPPEARING_OFFSET);
-            OF(bool is_squashed, PLANT_IS_SQUASHED_OFFSET);
+            OF(bool is_crushed, PLANT_IS_CRUSHED_OFFSET);
             OF(bool is_sleeping, PLANT_IS_SLEEPING_OFFSET);
             OF(uint32_t id, PLANT_ID_OFFSET);
         };

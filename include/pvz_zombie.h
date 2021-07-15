@@ -36,11 +36,11 @@ namespace pvz {
             OF(bool is_disgusted, ZOMBIE_IS_DISGUSTED_OFFSET);
             OF(uint32_t disgusted_countdown, ZOMBIE_DISGUSTED_COUNTDOWN_OFFSET);
             OF(HelmetType helmet_type, ZOMBIE_HELMET_TYPE_OFFSET);
-            OF(uint32_t hp, ZOMBIE_HP_OFFSET);
-            OF(uint32_t helmet_hp, ZOMBIE_HELMET_HP_OFFSET);
+            OF(int32_t hp, ZOMBIE_HP_OFFSET);
+            OF(int32_t helmet_hp, ZOMBIE_HELMET_HP_OFFSET);
             OF(ShieldType shield_type, ZOMBIE_SHIELD_TYPE_OFFSET);
-            OF(uint32_t shield_hp, ZOMBIE_SHIELD_HP_OFFSET);
-            OF(uint32_t balloon_hp, ZOMBIE_BALLOON_HP_OFFSET);
+            OF(int32_t shield_hp, ZOMBIE_SHIELD_HP_OFFSET);
+            OF(int32_t balloon_hp, ZOMBIE_BALLOON_HP_OFFSET);
             OF(uint32_t animation_id, ZOMBIE_ANIMATION_ID_OFFSET);
             OF(uint32_t id, ZOMBIE_ID_OFFSET);
         };

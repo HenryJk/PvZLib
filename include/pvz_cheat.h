@@ -22,5 +22,11 @@ namespace pvz {
     void EnablePlantInvincible();
     void DisablePlantInvincible();
 
+    void EnableBackgroundRunning();
+    void DisableBackgroundRunning();
+
+    void EnableNoSave();
+    void DisableNoSave();
+
     void DisableAllCheats();
 } // namespace pvz
