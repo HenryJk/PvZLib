@@ -17,16 +17,17 @@ namespace pvz {
 
         inline void LetsRock() {
             asm volatile("pushal;"
+#if defined VERSION_1_0_0_1051_EN
                          "movl %0, %%ebx;"
-                         "movl %1, %%esi;"
-                         "movl $0x1, %%edi;"
-                         "movl $0x1, %%ebp;"
-                         "movl %2, %%eax;"
+#elif defined VERSION_1_2_0_1096_EN
+                         "pushl %0;"
+#endif
+                         "movl %1, %%eax;"
                          "calll *%%eax;"
                          "popal;"
                          :
-                         : "g"(this), "i"(BASE_PTR_ADDRESS), "i"(LETS_ROCK_FUNC_ADDRESS)
-                         : "eax", "ebx", "esi", "edi", "esp");
+                         : "g"(this), "i"(LETS_ROCK_FUNC_ADDRESS)
+                         : "eax", "ebx", "esp");
         }
         void SelectCard(PlantType card_type);
         void SelectImitaterCard(PlantType imitater_type);

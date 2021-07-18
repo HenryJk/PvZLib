@@ -2,6 +2,7 @@
 
 #include <memoryapi.h>
 #include <processthreadsapi.h>
+#include <unistd.h>
 #include <unordered_map>
 #include <vector>
 #include <winnt.h>
@@ -9,207 +10,168 @@
 namespace {
     std::unordered_map<uintptr_t, std::vector<uint8_t>> original_codes;
     std::vector<uint8_t *> trampolines;
-    void SaveOriginalCode(uint8_t *address, uint32_t length) {
-        for (int i = 0; i < length; i++) original_codes[(uintptr_t) address].push_back(address[i]);
-    }
+
+    struct Trampoline {
+        uint8_t *internal;
+        uint32_t next;
+
+        Trampoline() {
+            internal = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+            trampolines.push_back(internal);
+            internal[0] = 0x60; // pushad;
+            next        = 1;
+        }
+
+        Trampoline &AddCustomInstructions(uint8_t *instructions, uint32_t length) {
+            memcpy(&internal[next], instructions, length);
+            next += length;
+            return *this;
+        }
+
+        Trampoline &AddCallHandler(uintptr_t handler, uint8_t args_size) {
+            internal[next]                   = 0xE8;
+            (uintptr_t &) internal[next + 1] = handler - (uintptr_t) &internal[next + 5];
+            internal[next + 5]               = 0x83; // add esp, arg_size
+            internal[next + 6]               = 0xC4;
+            internal[next + 7]               = args_size;
+            internal[next + 8]               = 0x61; // popad;
+            next += 9;
+            return *this;
+        }
+
+        Trampoline &AddBackJump(uintptr_t injection_address, uint32_t code_length) {
+            internal[next]                   = 0xE9; // jmp injection_address+code_length;
+            (uintptr_t &) internal[next + 1] = injection_address + code_length - (uintptr_t) &internal[next + 5];
+            next += 5;
+            return *this;
+        }
+
+        void Inject(uintptr_t injection_address) {
+            for (int i = 0; i < 5; i++) original_codes[injection_address].push_back(((uint8_t *) injection_address)[i]);
+            uint8_t patch[5];
+            patch[0]               = 0xE9; // jmp trampoline;
+            (uintptr_t &) patch[1] = (uintptr_t) internal - (injection_address + 5);
+            WriteProcessMemory(GetCurrentProcess(), (void *) injection_address, patch, sizeof(patch), nullptr);
+        }
+    };
 } // namespace
 
 void pvz::RegisterOnTickHook(void (*handler)()) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0xE8; // call handler
-    (uintptr_t &) trampoline[2] = (uintptr_t) handler - ((uintptr_t) trampoline + 6);
-    trampoline[6]               = 0x61; // popad;
-    memcpy(&trampoline[7], (void *) ON_TICK_INJECTION_ADDRESS, 5);
-    trampoline[12]               = 0xE9; // jmp ON_TICK_INJECTION_ADDRESS+5;
-    (uintptr_t &) trampoline[13] = (ON_TICK_INJECTION_ADDRESS + 5) - ((uintptr_t) trampoline + 17);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline;
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_TICK_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_TICK_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_TICK_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
+    Trampoline()
+            .AddCallHandler((uintptr_t) handler, 0)
+            .AddCustomInstructions((uint8_t *) ON_TICK_INJECTION_ADDRESS, 5)
+            .AddBackJump(ON_TICK_INJECTION_ADDRESS, 5)
+            .Inject(ON_TICK_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnZombieCreatedHook(void (*handler)(pvz::Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0xFF; // push [ebp+0x08];
-    trampoline[2]               = 0x75;
-    trampoline[3]               = 0x08;
-    trampoline[4]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[5] = (uintptr_t) handler - ((uintptr_t) trampoline + 9);
-    trampoline[9]               = 0x58; // pop eax;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, 6);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_ZOMBIE_CREATED_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+    uint8_t push_args[] = {0x57}; // push edi;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 4)
+            .AddCustomInstructions((uint8_t *) ON_ZOMBIE_CREATED_INJECTION_ADDRESS, 5)
+            .AddBackJump(ON_ZOMBIE_CREATED_INJECTION_ADDRESS, 5)
+            .Inject(ON_ZOMBIE_CREATED_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnPlantBittenHook(void (*handler)(Plant *, Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x56; // push esi;
-    trampoline[2]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[3] = (uintptr_t) handler - ((uintptr_t) trampoline + 7);
-    trampoline[7]               = 0x5E; // pop esi;
-    trampoline[8]               = 0x61; // popad;
-    memcpy(&trampoline[9], (void *) ON_PLANT_BITTEN_INJECTION_ADDRESS, 6);
-    trampoline[15]               = 0xE9; // jmp ON_PLANT_BITTEN_INJECTION_ADDRESS + 6;
-    (uintptr_t &) trampoline[16] = (ON_PLANT_BITTEN_INJECTION_ADDRESS + 6) - ((uintptr_t) trampoline + 20);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_PLANT_BITTEN_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_PLANT_BITTEN_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_PLANT_BITTEN_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
+    uint8_t push_args[] = {0x55, 0x56}; // push ebp; push esi;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+            .AddCustomInstructions((uint8_t *) ON_PLANT_BITTEN_INJECTION_ADDRESS, 6)
+            .AddBackJump(ON_PLANT_BITTEN_INJECTION_ADDRESS, 6)
+            .Inject(ON_PLANT_BITTEN_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnPlantCrushedHook(void (*handler)(Plant *, Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x57; // push edi;
-    trampoline[2]               = 0x51; // push ecx;
-    trampoline[3]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[4] = (uintptr_t) handler - ((uintptr_t) trampoline + 8);
-    trampoline[8]               = 0x58; // pop eax;
-    trampoline[9]               = 0x58; // pop eax;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_PLANT_CRUSHED_INJECTION_ADDRESS, 6);
-    trampoline[17]               = 0xE9; // jmp ON_PLANT_SQUASHED_INJECTION_ADDRESS + 6;
-    (uintptr_t &) trampoline[18] = (ON_PLANT_CRUSHED_INJECTION_ADDRESS + 6) - ((uintptr_t) trampoline + 22);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_PLANT_CRUSHED_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_PLANT_CRUSHED_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_PLANT_CRUSHED_INJECTION_ADDRESS, patch, sizeof(patch), nullptr);
+    uint8_t push_args[] = {0x57, 0x51}; // push edi; push ecx;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+            .AddCustomInstructions((uint8_t *) ON_PLANT_CRUSHED_INJECTION_ADDRESS, 6)
+            .AddBackJump(ON_PLANT_CRUSHED_INJECTION_ADDRESS, 6)
+            .Inject(ON_PLANT_CRUSHED_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnSpikerockDamaged(void (*handler)(Plant *, Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x53; // push ebx;
-    trampoline[2]               = 0x56; // push esi;
-    trampoline[3]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[4] = (uintptr_t) handler - ((uintptr_t) trampoline + 8);
-    trampoline[8]               = 0x58; // pop eax;
-    trampoline[9]               = 0x58; // pop eax;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS, 9);
-    trampoline[20]               = 0xE9; // jmp ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS + 9;
-    (uintptr_t &) trampoline[21] = (ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS + 9) - ((uintptr_t) trampoline + 25);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+    uint8_t push_args[] = {0x53, 0x56}; // push ebx; push esi;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+            .AddCustomInstructions((uint8_t *) ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS, 9)
+            .AddBackJump(ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS, 9)
+            .Inject(ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS);
 }
 
-void pvz::RegisterOnSpikeplantRanOver(void (*handler)(Plant *, Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x53; // push ebx;
-    trampoline[2]               = 0x55; // push ebp;
-    trampoline[3]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[4] = (uintptr_t) handler - ((uintptr_t) trampoline + 8);
-    trampoline[8]               = 0x58; // pop eax;
-    trampoline[9]               = 0x58; // pop eax;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS, 9);
-    trampoline[20]               = 0xE9; // jmp ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS + 9;
-    (uintptr_t &) trampoline[21] = (ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS + 9) - ((uintptr_t) trampoline + 25);
+void pvz::RegisterOnSpikeweedRanOver(void (*handler)(Plant *, Zombie *)) {
+    uint8_t push_args[] = {0x53, 0x55}; // push ebx; push ebp;
 
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_SPIKEPLANT_RAN_OVER_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+    uint8_t patched_code[5];
+    memcpy(patched_code, (void *) ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS, 5);
+    (uintptr_t &) patched_code[1] += ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS - (uintptr_t) patched_code;
+
+    auto t = Trampoline()
+                     .AddCustomInstructions(push_args, sizeof(push_args))
+                     .AddCallHandler((uintptr_t) handler, 8)
+                     .AddCustomInstructions((uint8_t *) ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS, 5);
+    (uintptr_t &) t.internal[t.next - 4] +=
+            ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS - ((uintptr_t) t.internal + t.next - 5);
+    t.AddBackJump(ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS, 5).Inject(ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS);
+}
+
+void pvz::RegisterOnPlantBlasted(void (*handler)(Plant *, Zombie *)) {
+    uint8_t push_args[] = {0xFF, 0x74, 0x24, 0x20, 0x56}; // push [esp+0x20]; push esi;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+#if defined VERSION_1_0_0_1051_EN
+            .AddCustomInstructions((uint8_t *) ON_PLANT_BLASTED_INJECTION_ADDRESS, 7)
+            .AddBackJump(ON_PLANT_BLASTED_INJECTION_ADDRESS, 7)
+#elif defined VERSION_1_2_0_1096_EN
+            .AddCustomInstructions((uint8_t *) ON_PLANT_BLASTED_INJECTION_ADDRESS, 6)
+            .AddBackJump(ON_PLANT_BLASTED_INJECTION_ADDRESS, 6)
+#endif
+            .Inject(ON_PLANT_BLASTED_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnProjectileCollideHook(void (*handler)(Projectile *, Zombie *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x50; // push eax;
-    trampoline[2]               = 0x51; // push ecx;
-    trampoline[3]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[4] = (uintptr_t) handler - ((uintptr_t) trampoline + 8);
-    trampoline[8]               = 0x59; // pop ecx;
-    trampoline[9]               = 0x58; // pop eax;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, 5);
-    trampoline[16]               = 0xE9; // jmp ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS + 5;
-    (uintptr_t &) trampoline[17] = (ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS + 5) - ((uintptr_t) trampoline + 21);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+    uint8_t push_args[] = {0x50, 0x51}; // push eax; push ecx;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+            .AddCustomInstructions((uint8_t *) ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, 5)
+            .AddBackJump(ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS, 5)
+            .Inject(ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnBasketballCollideHook(void (*handler)(Projectile *, Plant *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x56; // push esi;
-    trampoline[2]               = 0x55; // push ebp;
-    trampoline[3]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[4] = (uintptr_t) handler - ((uintptr_t) trampoline + 8);
-    trampoline[8]               = 0x5D; // pop ebp;
-    trampoline[9]               = 0x5E; // pop esi;
-    trampoline[10]              = 0x61; // popad;
-    memcpy(&trampoline[11], (void *) ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS, 6);
-    trampoline[17]               = 0xE9; // jmp ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS + 6;
-    (uintptr_t &) trampoline[18] = (ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS + 6) - ((uintptr_t) trampoline + 22);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+    uint8_t push_args[] = {0x56, 0x55}; // push esi; push ebp;
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 8)
+            .AddCustomInstructions((uint8_t *) ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS, 6)
+            .AddBackJump(ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS, 6)
+            .Inject(ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS);
 }
 
 void pvz::RegisterOnFrameRenderedHook(void (*handler)(IDirect3DDevice7 *)) {
-    auto trampoline = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    trampolines.push_back(trampoline);
-    trampoline[0]               = 0x60; // pushad;
-    trampoline[1]               = 0x50; // push eax;
-    trampoline[2]               = 0xE8; // call handler;
-    (uintptr_t &) trampoline[3] = (uintptr_t) handler - ((uintptr_t) trampoline + 7);
-    trampoline[7]               = 0x58; // pop eax;
-    trampoline[8]               = 0x61; // popad;
-    memcpy(&trampoline[9], (void *) ON_FRAME_RENDERED_INJECTION_ADDRESS, 5);
-    trampoline[14]               = 0xE9; // jmp ON_FRAME_RENDERED_INJECTION_ADDRESS + 5;
-    (uintptr_t &) trampoline[15] = (ON_FRAME_RENDERED_INJECTION_ADDRESS + 5) - ((uintptr_t) trampoline + 19);
-
-    uint8_t patch[5];
-    patch[0]               = 0xE9; // jmp trampoline
-    (uintptr_t &) patch[1] = (uintptr_t) trampoline - (ON_FRAME_RENDERED_INJECTION_ADDRESS + 5);
-    SaveOriginalCode((uint8_t *) ON_FRAME_RENDERED_INJECTION_ADDRESS, sizeof(patch));
-    WriteProcessMemory(GetCurrentProcess(), (void *) ON_FRAME_RENDERED_INJECTION_ADDRESS, patch, sizeof(patch),
-                       nullptr);
+#if defined VERSION_1_0_0_1051_EN
+    uint8_t push_args[] = {0x50}; // push eax;
+#elif defined VERSION_1_2_0_1096_EN
+    uint8_t push_args[] = {0x52}; // push edx;
+#endif
+    Trampoline()
+            .AddCustomInstructions(push_args, sizeof(push_args))
+            .AddCallHandler((uintptr_t) handler, 4)
+            .AddCustomInstructions((uint8_t *) ON_FRAME_RENDERED_INJECTION_ADDRESS, 5)
+            .AddBackJump(ON_FRAME_RENDERED_INJECTION_ADDRESS, 5)
+            .Inject(ON_FRAME_RENDERED_INJECTION_ADDRESS);
 }
 
 void pvz::DisableAllHooks() {
     for (auto &[address, code] : original_codes)
         WriteProcessMemory(GetCurrentProcess(), (void *) address, &code[0], code.size(), nullptr);
-    for (auto &trampoline : trampolines) VirtualFree(trampoline, 0, MEM_RELEASE);
+    //    sleep(1);
+    //    for (auto &trampoline : trampolines) VirtualFree(trampoline, 0, MEM_RELEASE);
 }

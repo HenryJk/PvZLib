@@ -10,7 +10,8 @@ namespace pvz {
     void RegisterOnPlantBittenHook(void (*handler)(Plant *, Zombie *));
     void RegisterOnPlantCrushedHook(void (*handler)(Plant *, Zombie *));
     void RegisterOnSpikerockDamaged(void (*handler)(Plant *, Zombie *));
-    void RegisterOnSpikeplantRanOver(void (*handler)(Plant *, Zombie *));
+    void RegisterOnSpikeweedRanOver(void (*handler)(Plant *, Zombie *));
+    void RegisterOnPlantBlasted(void (*handler)(Plant *, Zombie *));
     void RegisterOnProjectileCollideHook(void (*handler)(Projectile *, Zombie *));
     void RegisterOnBasketballCollideHook(void (*handler)(Projectile *, Plant *));
     void RegisterOnFrameRenderedHook(void (*handler)(IDirect3DDevice7 *));

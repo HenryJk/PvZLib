@@ -33,9 +33,9 @@ set(source_files
         )
 
 add_library(pvz_1_0_0_1051_en ${source_files})
-target_compile_definitions(pvz_1_0_0_1051_en PUBLIC VERSION=V_1_0_0_1051_EN)
+target_compile_definitions(pvz_1_0_0_1051_en PUBLIC VERSION_1_0_0_1051_EN)
 target_include_directories(pvz_1_0_0_1051_en PUBLIC ${include_dir})
 
-#add_library(pvz_1_2_0_1096_en ${source_files})
-#target_compile_definitions(pvz_1_2_0_1096_en PUBLIC VERSION=V_1_2_0_1096_EN)
-#target_include_directories(pvz_1_2_0_1096_en PUBLIC ${include_dir})
+add_library(pvz_1_2_0_1096_en ${source_files})
+target_compile_definitions(pvz_1_2_0_1096_en PUBLIC VERSION_1_2_0_1096_EN)
+target_include_directories(pvz_1_2_0_1096_en PUBLIC ${include_dir})
