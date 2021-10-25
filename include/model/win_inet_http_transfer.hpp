@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdio>
+
 namespace pvz {
     struct WinInetHTTPTransfer {
         UNKNOWN_BYTES(4);

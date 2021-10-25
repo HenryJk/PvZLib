@@ -842,6 +842,11 @@ namespace pvz {
         kLilypadInvulnerable   = 48,
     };
 
+    enum class PlantSubClass : int32_t {
+        kNormal = 0,
+        kShooter = 1,
+    };
+
     enum class PottedPlantAge : int32_t {
         kSprout = 0,
         kSmall  = 1,

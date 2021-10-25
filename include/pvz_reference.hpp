@@ -22,7 +22,7 @@
 
 #define UNDECIPHERABLE      char
 
-#if VERSION == V_1_0_0_1051_EN // Original English
+#if defined VERSION_1_0_0_1051_EN // Original English
 #include "pvz_reference/1_0_0_1051_en.h"
 #endif
 

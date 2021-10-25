@@ -16,12 +16,11 @@
 #include "tool_tip_widget.hpp"
 #include "zombie.hpp"
 
-#include <comdef.h>
-#include <wingdi.h>
 
 namespace pvz {
     struct LawnApp;
-    struct Board : EMRPLGBLT {
+    struct Board : Widget {
+        UNKNOWN_BYTES(4);
         LawnApp *mApp;
         DataArray<Zombie> mZombies;
         DataArray<Plant> mPlants;

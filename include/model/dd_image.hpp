@@ -2,8 +2,7 @@
 
 namespace pvz {
     struct DDInterface;
-    struct DDImage {
-        UNKNOWN_BYTES(108);
+    struct DDImage : MemoryImage {
         DDInterface *mDDInterface;
         IDirectDrawSurface *mSurface;
         bool mSurfaceSet;

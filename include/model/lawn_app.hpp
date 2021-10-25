@@ -87,5 +87,9 @@ namespace pvz {
         bool mDaisyMode;
         bool mSukhbirMode;
         UNKNOWN_BYTES(6);
+
+#ifdef VERSION_1_0_0_1051_EN
+        static LawnApp &GetInstance() { return **(LawnApp **) 0x6A9EC0; }
+#endif
     };
 } // namespace pvz

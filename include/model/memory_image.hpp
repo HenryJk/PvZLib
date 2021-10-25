@@ -2,8 +2,7 @@
 
 namespace pvz {
     struct SexyAppBase;
-    struct MemoryImage {
-        UNKNOWN_BYTES(56);
+    struct MemoryImage : Image {
         uint32_t *mBits;
         int32_t mBitsChangedCount;
         void *mD3DData;

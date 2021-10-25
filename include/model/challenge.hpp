@@ -1,6 +1,9 @@
 #pragma once
 
+#include "enum.hpp"
+
 namespace pvz {
+    struct LawnApp;
     struct Board;
     struct Challenge {
         LawnApp *mApp;

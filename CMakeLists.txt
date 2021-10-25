@@ -32,7 +32,7 @@ set(source_files
         include/model/dialog.hpp
         include/model/dialog_button.hpp
         include/model/effect_system.hpp
-        include/enum.hpp
+        include/model/enum.hpp
         include/model/flags_mod.hpp
         include/model/float_parameter_track.hpp
         include/model/foley_instance.hpp
@@ -101,12 +101,11 @@ set(source_files
         include/model/zen_garden.hpp
         include/model/zombie.hpp
         include/model/incompatible_stdlib.hpp
-        src/model/plant.cpp
-        src/hook.cpp include/hook.hpp)
+        include/event.hpp src/event.cpp)
 
 add_library(pvz_1_0_0_1051_en ${source_files})
 set_target_properties(pvz_1_0_0_1051_en PROPERTIES LINKER_LANGUAGE CXX)
-target_compile_definitions(pvz_1_0_0_1051_en PUBLIC VERSION=V_1_0_0_1051_EN)
+target_compile_definitions(pvz_1_0_0_1051_en PUBLIC VERSION_1_0_0_1051_EN)
 target_include_directories(pvz_1_0_0_1051_en PUBLIC ${include_dir})
 
 #add_library(pvz_1_2_0_1096_en ${source_files})
