@@ -15,7 +15,7 @@ namespace {
         uint8_t *mCode;
         uint32_t mNext;
 
-        Trampoline(pvz::Event *event) {
+        explicit Trampoline(pvz::Event *event) {
             mEvent = event;
             events.push_back(event);
             mCode = (uint8_t *) VirtualAlloc(nullptr, 64, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
@@ -70,6 +70,17 @@ namespace {
 #endif
     }
 
+    void InjectBoardKillAllPlantsInRadius(void (*handler)(pvz::Event *)) {
+        auto event = new pvz::Event;
+#ifdef VERSION_1_0_0_1051_EN
+        auto injection_address = 0x41CC52;
+        Trampoline(event)
+                .AddCallHandler((uintptr_t) handler)
+                .AddCustomInstructions((uint8_t *) injection_address, 3)
+                .Inject(injection_address);
+#endif
+    }
+
     void InjectBoardUpdateGameObjects(void (*handler)(pvz::Event *)) {
         auto event = new pvz::Event;
 #ifdef VERSION_1_0_0_1051_EN
@@ -106,6 +117,9 @@ namespace pvz {
         switch (type) {
             case EventType::kBoard_DrawGameObjects:
                 InjectBoardDrawGameObjects(handler);
+                break;
+            case EventType::kBoard_KillAllPlantsInRadius:
+                InjectBoardKillAllPlantsInRadius(handler);
                 break;
             case EventType::kBoard_UpdateGameObjects:
                 InjectBoardUpdateGameObjects(handler);

@@ -3,5 +3,7 @@ Address         Function
 VERSION_1_0_0_1051_EN
 0x0041ACF0      Board::Draw
 0x00416880      Board::DrawGameObjects
-0x004130D0      Board::Update
+0x0041C950      Board::IteratePlants
+0x0041CBF0      Board::KillAllPlantsInRadius
+0x004130D0      Board::UpdateGameObjects
 0x00465A90      Plant::Draw
