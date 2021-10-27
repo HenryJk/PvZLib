@@ -84,27 +84,27 @@ namespace {
     };
 
     struct Injector {
-        Event *mEvent = new Event;
+        Event *mEvent;
         pair<uintptr_t, uint32_t> mEntryPoint;
-        vector<pair<uintptr_t, uint32_t>> mExitPoints;
         vector<int32_t> mParamOffsets;
+        vector<pair<uintptr_t, uint32_t>> mExitPoints;
         EventHandler mPreEventHandler  = nullptr;
         EventHandler mPostEventHandler = nullptr;
 
-        Injector() = default;
+        Injector(Event *event) { mEvent = event; }
 
         Injector &EntryPoint(pair<uintptr_t, uint32_t> entry_point) {
             mEntryPoint = entry_point;
             return *this;
         }
 
-        Injector &ExitPoints(vector<pair<uintptr_t, uint32_t>> &exit_points) {
-            mExitPoints = exit_points;
+        Injector &ParamOffsets(vector<int32_t> &parameter_offsets) {
+            mParamOffsets = parameter_offsets;
             return *this;
         }
 
-        Injector &ParamOffsets(vector<int32_t> &parameter_offsets) {
-            mParamOffsets = parameter_offsets;
+        Injector &ExitPoints(vector<pair<uintptr_t, uint32_t>> &exit_points) {
+            mExitPoints = exit_points;
             return *this;
         }
 
@@ -154,49 +154,56 @@ namespace {
 
 namespace pvz {
     void Event::InjectEventHandler(EventType type, EventHandler pre_event_handler, EventHandler post_event_handler) {
+        auto event = new Event;
         pair<uintptr_t, uint32_t> entry_point;
-        vector<pair<uintptr_t, uint32_t>> exit_points;
         vector<int32_t> param_offsets;
+        vector<pair<uintptr_t, uint32_t>> exit_points;
         switch (type) {
 #ifdef VERSION_1_0_0_1051_EN
             case EventType::kBoard_DrawGameObjects:
                 entry_point   = {0x416880, 6};
-                exit_points   = {{0x417350, 6}};
                 param_offsets = {0x04};
+                exit_points   = {{0x417350, 6}};
                 break;
             case EventType::kBoard_KillAllPlantsInRadius:
                 entry_point   = {0x41CBF0, 8};
-                exit_points   = {{0x41CC4F, 6}};
                 param_offsets = {EDX, 0x04, EBX};
+                exit_points   = {{0x41CC4F, 6}};
+                break;
+            case EventType::kBoard_KillAllZombiesInRadius:
+                entry_point   = {0x41D8A0, 6};
+                param_offsets = {0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C, 0x20};
+                exit_points   = {{0x41DA09, 3}};
                 break;
             case EventType::kBoard_UpdateGameObjects:
                 entry_point   = {0x4130D0, 5};
-                exit_points   = {{0x413210, 1}};
                 param_offsets = {0x04};
+                exit_points   = {{0x413210, 1}};
                 break;
             case EventType::kPlant_BlowAwayFliers:
                 entry_point   = {0x4665B0, 5};
-                exit_points   = {{0x466649, 6}};
                 param_offsets = {0x04};
+                exit_points   = {{0x466649, 6}};
                 break;
             case EventType::kPlant_BurnRow:
                 entry_point   = {0x4664B0, 5};
-                exit_points   = {{0x466649, 6}};
                 param_offsets = {0x08, 0x04};
+                exit_points   = {{0x466649, 6}};
                 break;
             case EventType::kPlant_CobCannonFire:
                 entry_point   = {0x466D50, 7};
-                exit_points   = {{0x466DFB, 4}};
                 param_offsets = {EAX, ECX, ESI};
+                exit_points   = {{0x466DFB, 4}};
                 break;
             case EventType::kPlant_Die:
                 entry_point   = {0x4679B0, 5};
-                exit_points   = {{0x467AF9, 3}};
                 param_offsets = {0x04};
+                exit_points   = {{0x467AF9, 3}};
                 break;
             case EventType::kPlant_Fire:
-                entry_point = {0x466E00, 8};
-                exit_points = {
+                entry_point   = {0x466E00, 8};
+                param_offsets = {0x04, 0x08, 0x0C, 0x10};
+                exit_points   = {
                         {0x467553, 3},
                         {0x466E7C, 6},
                         {0x466E93, 6},
@@ -206,13 +213,92 @@ namespace pvz {
                         {0x4673AA, 6},
                         {0x46741f, 6},
                 };
-                param_offsets = {0x04, 0x08, 0x0C, 0x10};
+                break;
+            case EventType::kPlant_IceZombies:
+                entry_point   = {0x466420, 6};
+                param_offsets = {0x04};
+                exit_points   = {{0x4664A9, 1}};
+                break;
+            case EventType::kPlant_KillAllPlantsNearDoom:
+                entry_point   = {0x466650, 6};
+                param_offsets = {0x04};
+                exit_points   = {{0x46669B, 4}};
+                break;
+            case EventType::kPlant_PlantInitialize:
+                entry_point   = {0x45DB60, 6};
+                param_offsets = {0x04, 0x10, EAX, 0x08, 0x0C};
+                exit_points   = {{0x45e7b0, 3}};
+                break;
+            case EventType::kPlant_Squish:
+                entry_point   = {0x462B80, 6};
+                param_offsets = {0x04};
+                exit_points   = {{0x462C05, 5}, {0x462CD0, 3}};
+                break;
+            case EventType::kProjectile_DoImpact:
+                entry_point   = {0x46E000, 6};
+                param_offsets = {0x08, EAX};
+                exit_points   = {{0x46EBB9, 1}};
+                { // custom trampoline
+                    auto custom_point = 0x46EB39;
+                    Trampoline(event)
+                            .AddCustomInstructions((uint8_t *) custom_point, 5)
+                            .AddRegisterPreservation()
+                            .AddCallHandler(post_event_handler)
+                            .AddRegisterRestoration()
+                            .AddBackJump(custom_point + 5)
+                            .Inject(custom_point);
+                }
+                break;
+            case EventType::kProjectile_DoSplashDamage:
+                entry_point   = {0x468380, 5};
+                param_offsets = {0x08, EAX};
+                exit_points   = {{0x46d484, 3}};
+                break;
+            case EventType::kProjectile_ProjectileInitialize:
+                entry_point   = {0x46C730, 6};
+                param_offsets = {0x04, 0x08, 0x0C, 0x10, EAX, 0x14};
+                exit_points   = {{0x46CA8F, 3}};
+                break;
+            case EventType::kZombie_BungeeStealTarget:
+                entry_point   = {0x524C70, 6};
+                param_offsets = {0x04};
+                exit_points   = {{0x524D63, 1}};
+                break;
+            case EventType::kZombie_DieNoLoot:
+                entry_point   = {0x530510, 6};
+                param_offsets = {0x04};
+                exit_points   = {{0x530637, 1}};
+                break;
+            case EventType::kZombie_EatPlant:
+                entry_point   = {0x52FB40, 7};
+                param_offsets = {0x04, ECX};
+                exit_points   = {{0x52FB7E, 6}, {0x52FC75, 6}, {0x52FBE4, 6}, {0x52FE00, 3}};
+                break;
+            case EventType::kZombie_EatZombie:
+                entry_point   = {0x52FE10, 5};
+                param_offsets = {0x04, EAX};
+                exit_points   = {{0x52FE43, 1}};
+                break;
+            case EventType::kZombie_TakeDamage:
+                entry_point   = {0x5317C0, 7};
+                param_offsets = {ESI, 0x04, 0x08};
+                exit_points   = {{0x53187B, 3}};
+                break;
+            case EventType::kZombie_SquishAllInSquare:
+                entry_point   = {0x52E920, 6};
+                param_offsets = {0x10, 0x04, 0x08, 0x0C};
+                exit_points   = {{0x52E995, 3}};
+                break;
+            case EventType::kZombie_ZombieInitialize:
+                entry_point   = {0x522580, 6};
+                param_offsets = {0x04, 0x08, EAX, 0x0C, 0x10};
+                exit_points   = {{0x52403B, 3}};
                 break;
             default:
                 break;
 #endif
         }
-        Injector()
+        Injector(event)
                 .EntryPoint(entry_point)
                 .ExitPoints(exit_points)
                 .ParamOffsets(param_offsets)
