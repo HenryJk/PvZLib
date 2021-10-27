@@ -291,7 +291,7 @@ namespace pvz {
                 break;
             case EventType::kZombie_ZombieInitialize:
                 entry_point   = {0x522580, 6};
-                param_offsets = {0x04, 0x08, EAX, 0x0C, 0x10};
+                param_offsets = {0x04, 0x08, EAX, 0x0C, 0x10, 0x14};
                 exit_points   = {{0x52403B, 3}};
                 break;
             default:
