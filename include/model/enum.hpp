@@ -847,6 +847,11 @@ namespace pvz {
         kShooter = 1,
     };
 
+    enum class PlantWeapon : int32_t {
+        kPrimary = 0,
+        kSecondary = 1,
+    };
+
     enum class PottedPlantAge : int32_t {
         kSprout = 0,
         kSmall  = 1,

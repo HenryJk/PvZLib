@@ -4,18 +4,22 @@
 
 
 namespace pvz {
+    struct Event;
+
+    typedef void (*EventHandler)(Event *);
+
     enum class EventType {
-        kBoard_DrawGameObjects,
-        kBoard_KillAllPlantsInRadius,
-        kBoard_UpdateGameObjects,
-        kPlant_BlowAwayFliers,
-        kPlant_BurnRow,
-        kPlant_CobCannonFire,
-        kPlant_Die,
-        kPlant_Draw,
-        kPlant_Fire,
+        // Event                      // Parameters
+        kBoard_DrawGameObjects,       // Board *this
+        kBoard_KillAllPlantsInRadius, // Board *this, int32_t x, int32_t y
+        kBoard_UpdateGameObjects,     // Board *this
+        kPlant_BlowAwayFliers,        // Plant *this
+        kPlant_BurnRow,               // Plant *this, int32_t row
+        kPlant_CobCannonFire,         // Plant *this, int32_t x, int32_t y
+        kPlant_Die,                   // Plant *this
+        kPlant_Fire,                  // Plant *this, Zombie *target, int32_t row, PlantWeapon weapon
         kPlant_IceZombies,
-        kPlant_Initialize,
+        kPlant_PlantInitialize,
         kPlant_KillAllPlantsNearDoom,
         kPlant_Squish,
         kProjectile_DoImpact,
@@ -32,16 +36,9 @@ namespace pvz {
     };
 
     struct Event {
-        Coin *mCoin = nullptr;
-        GridItem *mGridItem = nullptr;
-        LawnMower *mLawnMower = nullptr;
-        Plant *mPlant = nullptr;
-        Projectile *mProjectile = nullptr;
-        Zombie *mZombie = nullptr;
-        int32_t mCol = 0;
-        int32_t mRow = 0;
+        int32_t mParams[6];
 
-        static void InjectEventHandler(EventType type, void (*handler)(Event *));
+        static void InjectEventHandler(EventType type, EventHandler pre_event_handler, EventHandler post_event_handler);
 
         static void EjectEventHandler(EventType type);
     };

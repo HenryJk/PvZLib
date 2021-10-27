@@ -1,9 +1,15 @@
-Address         Function
+Address         Function                            remarks
 
 VERSION_1_0_0_1051_EN
 0x0041ACF0      Board::Draw
 0x00416880      Board::DrawGameObjects
 0x0041C950      Board::IteratePlants
-0x0041CBF0      Board::KillAllPlantsInRadius
+0x0041C8F0      Board::IterateZombies
+0x0041CBF0      Board::KillAllPlantsInRadius        radius hardcoded as 90 in release version
 0x004130D0      Board::UpdateGameObjects
+0x004665B0      Plant::BlowAwayFliers
+0x004664B0      Plant::BurnRow
+0x00466D50      Plant::CobCannonFire
+0x004679B0      Plant::Die
 0x00465A90      Plant::Draw
+0x00466E00      Plant::Fire                         Zombie *target (param_2) only used for catapult plants
