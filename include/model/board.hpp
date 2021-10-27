@@ -1,0 +1,139 @@
+#pragma once
+
+#include "challenge.hpp"
+#include "coin.hpp"
+#include "cursor_object.hpp"
+#include "cursor_preview.hpp"
+#include "cut_scene.hpp"
+#include "data_array.hpp"
+#include "grid_item.hpp"
+#include "lawn_mower.hpp"
+#include "message_widget.hpp"
+#include "plant.hpp"
+#include "projectile.hpp"
+#include "seed_bank.hpp"
+#include "tod_smooth_array.hpp"
+#include "tool_tip_widget.hpp"
+#include "zombie.hpp"
+
+
+namespace pvz {
+    struct LawnApp;
+    struct Board : Widget {
+        UNKNOWN_BYTES(4);
+        LawnApp *mApp;
+        DataArray<Zombie> mZombies;
+        DataArray<Plant> mPlants;
+        DataArray<Projectile> mProjectiles;
+        DataArray<Coin> mCoins;
+        DataArray<LawnMower> mLawnMowers;
+        DataArray<GridItem> mGridItems;
+        CursorObject *mCursorObject;
+        CursorPreview *mCursorPreview;
+        MessageWidget *mAdvice;
+        SeedBank *mSeedBank;
+        GameButton *mMenuButton;
+        GameButton *mStoreButton;
+        bool mIgnoreMouseUp;
+        ToolTipWidget *mToolTip;
+        Font *mDebugFont;
+        CutScene *mCutScene;
+        Challenge *mChallenge;
+        bool mPaused;
+        GridSquareType mGridSquareType[9][6];
+        int32_t mGridCelLook[9][6];
+        int32_t mGridCelOffset[9][6][2];
+        int32_t mGridCelFog[9][7];
+        bool mEnableGraveStones;
+        int32_t mSpecialGraveStoneX;
+        int32_t mSpecialGraveStoneY;
+        float mFogOffset;
+        int32_t mFogBlownCountdown;
+        PlantRowType mPlantRow[6];
+        int32_t mWaveRowGotLawnMowered[6];
+        int32_t mBonusLawnMowersRemaining;
+        int32_t mIceMinX[6];
+        int32_t mIceTimer[6];
+        int32_t mIceParticleID[6];
+        TodSmoothArray mRowPickingArray[6];
+        ZombieType mZombiesInWave[100][50];
+        bool mZombieAllowed[100];
+        int32_t mSunCountDown;
+        int32_t mNumSunsFallen;
+        int32_t mShakeCounter;
+        int32_t mShakeAmountX;
+        int32_t mShakeAmountY;
+        BackgroundType mBackground;
+        int32_t mLevel;
+        int32_t mSodPosition;
+        int32_t mPrevMouseX;
+        int32_t mPrevMouseY;
+        int32_t mSunMoney;
+        int32_t mNumWaves;
+        int32_t mMainCounter;
+        int32_t mEffectCounter;
+        int32_t mDrawCount;
+        int32_t mRiseFromGraveCounter;
+        int32_t mOutOfMoneyCounter;
+        int32_t mCurrentWave;
+        int32_t mTotalSpawnedWaves;
+        TutorialState mTutorialState;
+        int32_t mTutorialParticleID;
+        int32_t mTutorialTimer;
+        int32_t mLastBungeeWave;
+        int32_t mZombieHealthToNextWave;
+        int32_t mZombieHealthWaveStart;
+        int32_t mZombieCountDown;
+        int32_t mZombieCountDownStart;
+        int32_t mHugeWaveCountDown;
+        bool mHelpDisplayed[65];
+        AdviceType mHelpIndex;
+        bool mFinalBossKilled;
+        bool mShowShovel;
+        int32_t mCoinBankFadeCount;
+        DebugTextMode mDebugTextMode;
+        bool mLevelComplete;
+        int32_t mBoardFadeOutCounter;
+        int32_t mNextSurvivalStageCounter;
+        int32_t mScoreNextMowerCounter;
+        bool mLevelAwardSpawned;
+        int32_t mProgressMeterWidth;
+        int32_t mFlagRaiseCounter;
+        int32_t mIceTrapCounter;
+        int32_t mBoardRandSeed;
+        int32_t mPoolSparklyParticleID;
+        int32_t mFwooshID[6][12];
+        int32_t mFwooshCountDown;
+        int32_t mTimeStopCounter;
+        bool mDroppedFirstCoin;
+        int32_t mFinalWaveSoundCounter;
+        int32_t mCobCannonCursorDelayCounter;
+        int32_t mCobCannonMouseX;
+        int32_t mCobCannonMouseY;
+        bool mKilledYeti;
+        bool mMustacheMode;
+        bool mSuperMowerMode;
+        bool mFutureMode;
+        bool mPinataMode;
+        bool mDaisyMode;
+        bool mSukhbirMode;
+        BoardResult mPrevBoardResult;
+        int32_t mTriggeredLawnMowers;
+        int32_t mPlayTimeActiveLevel;
+        int32_t mPlayTimeInactiveLevel;
+        int32_t mMaxSunPlants;
+        int32_t mStartDrawTime;
+        int32_t mIntervalDrawTime;
+        int32_t mIntervalDrawCountStart;
+        float mMinFPS;
+        int32_t mPreloadTime;
+        int32_t mGameIDl;
+        int32_t mGravesCleared;
+        int32_t mPlantsEaten;
+        int32_t mPlantsShoveled;
+        int32_t mCoinsCollected;
+        int32_t mDiamondsCollected;
+        int32_t mPottedPlantsCollected;
+        int32_t mChocolateCollected;
+    };
+} // namespace pvz
