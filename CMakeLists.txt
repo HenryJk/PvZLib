@@ -101,7 +101,7 @@ set(source_files
         include/model/zen_garden.hpp
         include/model/zombie.hpp
         include/model/incompatible_stdlib.hpp
-        include/event.hpp src/event.cpp)
+        include/event.hpp src/event.cpp include/trampoline.hpp src/trampoline.cpp)
 
 add_library(pvz_1_0_0_1051_en ${source_files})
 set_target_properties(pvz_1_0_0_1051_en PROPERTIES LINKER_LANGUAGE CXX)

@@ -13,3 +13,5 @@
 #include "model/lawn_app.hpp"
 
 #include "event.hpp"
+
+#include "trampoline.hpp"

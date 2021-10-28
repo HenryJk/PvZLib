@@ -33,7 +33,7 @@ namespace pvz {
         kZombie_EatZombie,                  // Zombie *this, Zombie *target
         kZombie_TakeDamage,                 // Zombie *this, int32 damage, int32 damage_flags
         kZombie_SquishAllInSquare,          // Zombie *this, int32 col, int32 row, ZombieAttackType attack_type
-        kZombie_ZombieInitialize,           // Zombie *this, int32 col, ZombieType type, bool hypnotized, Zombie *summoner, int32 unknown
+        kZombie_ZombieInitialize,           // Zombie *this, int32 col, ZombieType type, bool hypnotized, Zombie *summoner, int32 from_wave
         // clang-format on
     };
 
