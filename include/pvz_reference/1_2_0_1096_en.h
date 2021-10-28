@@ -7,105 +7,105 @@
 #pragma ide diagnostic ignored "OCUnusedMacroInspection"
 
 // code disassembly
-#define CLICK_BATTLEFIELD_FUNC_ADDRESS               0x411F20
-#define LAUNCH_COB_FUNC_ADDRESS                      0x466D50
-#define LETS_ROCK_FUNC_ADDRESS                       0x486D20
+#define CLICK_BATTLEFIELD_FUNC_ADDRESS               0x415430
+#define LAUNCH_COB_FUNC_ADDRESS                      0x46D1F0
+#define LETS_ROCK_FUNC_ADDRESS                       0x495370
+
 #define CLICK_SCREEN_FUNC_ADDRESS                    0x539390
 
-#define ON_TICK_INJECTION_ADDRESS                    0x4130d0
-#define ON_ZOMBIE_CREATED_INJECTION_ADDRESS          0x524035
-#define ON_PLANT_BITTEN_INJECTION_ADDRESS            0x52FB91
-#define ON_PLANT_CRUSHED_INJECTION_ADDRESS           0x462B80
-#define ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS       0x45EC00
-#define ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS      0x45EE16
-#define ON_PLANT_BLASTED_INJECTION_ADDRESS           0x41CC31
-#define ON_PLANT_REMOVED_INJECTION_ADDRESS           0x4679B0
-#define ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS      0x46E000
-#define ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS      0x46D793
-#define ON_FRAME_RENDERED_INJECTION_ADDRESS          0x568ECE
-#define ON_TICK_INJECTION_ADDRESS                    0x4130d0
+#define ON_TICK_INJECTION_ADDRESS                    0x4165E0
+#define ON_ZOMBIE_CREATED_INJECTION_ADDRESS          0x53819D
+#define ON_PLANT_BITTEN_INJECTION_ADDRESS            0x544641
+#define ON_PLANT_CRUSHED_INJECTION_ADDRESS           0x468F60
+#define ON_SPIKEROCK_DAMAGED_INJECTION_ADDRESS       0x464F10
+#define ON_SPIKEWEED_RAN_OVER_INJECTION_ADDRESS      0x465126
+#define ON_PLANT_BLASTED_INJECTION_ADDRESS           0x4207E1
+#define ON_PLANT_REMOVED_INJECTION_ADDRESS           0x46DE50
+#define ON_PROJECTILE_COLLIDE_INJECTION_ADDRESS      0x476030
+#define ON_BASKETBALL_COLLIDE_INJECTION_ADDRESS      0x4757A6
+#define ON_FRAME_RENDERED_INJECTION_ADDRESS          0x56E333
 
-#define BASE_PTR_ADDRESS                             0x6A9EC0
+#define BASE_PTR_ADDRESS                             0x731C50
 
 // Cheats
 
-#define SPEED_UNLOCK_INJECTION_ADDRESS               0x551DBF
-#define SPEED_UNLOCK_CHEAT_CODE                      {0x90, 0x90};
-#define SPEED_UNLOCK_ORIGINAL_CODE                   {0xF7, 0xF9};
+#define SPEED_UNLOCK_INJECTION_ADDRESS               0x5DCEF1
+#define SPEED_UNLOCK_CHEAT_CODE                      {0x90, 0x90, 0x90, 0x90, 0x90, 0x90};
+#define SPEED_UNLOCK_ORIGINAL_CODE                   {0xF7, 0xB9, 0xB4, 0x04, 0x00, 0x00};
 
-#define AUTO_COLLECT_INJECTION_ADDRESS               0x43158F
+#define AUTO_COLLECT_INJECTION_ADDRESS               0x4352F2
 #define AUTO_COLLECT_CHEAT_CODE                      {0xEB};
 #define AUTO_COLLECT_ORIGINAL_CODE                   {0x75};
 
-#define NO_DROP_INJECTION_ADDRESS                    0x41D025
+#define NO_DROP_INJECTION_ADDRESS                    0x420BD6
 #define NO_DROP_CHEAT_CODE                           {0x90, 0xE9};
 #define NO_DROP_ORIGINAL_CODE                        {0x0F, 0x8F};
 
-#define BACKGROUND_RUNNING_INJECTION_ADDRESS         0x54EBA8
+#define BACKGROUND_RUNNING_INJECTION_ADDRESS         0x5D87C9
 #define BACKGROUND_RUNNING_CHEAT_CODE                {0xEB, 0x00};
-#define BACKGROUND_RUNNING_ORIGINAL_CODE             {0x74, 0x2E};
+#define BACKGROUND_RUNNING_ORIGINAL_CODE             {0x74, 0x40};
 
-#define NO_DELETE_USERDATA_INJECTION_ADDRESS         0x54B267
+#define NO_DELETE_USERDATA_INJECTION_ADDRESS         0x5D3FD3
 #define NO_DELETE_USERDATA_CHEAT_CODE                {0x70};
 #define NO_DELETE_USERDATA_ORIGINAL_CODE             {0x74};
 
-#define NO_SAVE_USERDATA_INJECTION_ADDRESS           0x482149
-#define NO_SAVE_USERDATA_CHEAT_CODE                  {0x2E, 0x8B, 0x0C, 0x00};
-#define NO_SAVE_USERDATA_ORIGINAL_CODE               {0x13, 0x8B, 0x0C, 0x00};
+#define NO_SAVE_USERDATA_INJECTION_ADDRESS           0x4907EA
+#define NO_SAVE_USERDATA_CHEAT_CODE                  {0x6A, 0x2F, 0x14, 0x00};
+#define NO_SAVE_USERDATA_ORIGINAL_CODE               {0x42, 0x2F, 0x14, 0x00};
 
 // Base object structure
 #define BASE_MUSIC_VOLUME_OFFSET                     0xD0
 #define BASE_SFX_VOLUME_OFFSET                       0xD8
 #define BASE_SCREEN_PTR_OFFSET                       0x320
-#define BASE_MS_PER_TICK_OFFSET                      0x454
-#define BASE_GAME_PTR_OFFSET                         0x768
-#define BASE_PREGAME_UI_PTR_OFFSET                   0x774
-#define BASE_GAME_TYPE_OFFSET                        0x7F8
-#define BASE_GAME_STATUS_OFFSET                      0x7FC
-#define BASE_FREE_PLANTING_MODE_OFFSET               0x814
+#define BASE_MS_PER_TICK_OFFSET                      0x454 + 0x60
+#define BASE_GAME_PTR_OFFSET                         0x768 + 0x100
+#define BASE_PREGAME_UI_PTR_OFFSET                   0x774 + 0x100
+#define BASE_GAME_TYPE_OFFSET                        0x7F8 + 0x120
+#define BASE_GAME_STATUS_OFFSET                      0x7FC + 0x120
+#define BASE_FREE_PLANTING_MODE_OFFSET               0x814 + 0x120
 
 // Game object structure
-#define GAME_ZOMBIE_PTR_OFFSET                       0x90
-#define GAME_ZOMBIE_COUNT_OFFSET                     0x94
-#define GAME_PLANT_PTR_OFFSET                        0xAC
-#define GAME_PLANT_COUNT_OFFSET                      0xB0
-#define GAME_PLANT_NEXT_OFFSET                       0xB8
-#define GAME_PROJECTILE_PTR_OFFSET                   0xC8
-#define GAME_PROJECTILE_COUNT_OFFSET                 0xCC
-#define GAME_FLOATING_ITEM_PTR_OFFSET                0xE4
-#define GAME_FLOATING_ITEM_COUNT_OFFSET              0xE8
-#define GAME_LAWNMOWER_PTR_OFFSET                    0x100
-#define GAME_LAWNMOWER_COUNT_OFFSET                  0x104
-#define GAME_GRID_ITEM_PTR_OFFSET                    0x11C
-#define GAME_GRID_ITEM_COUNT_OFFSET                  0x120
-#define GAME_CURSOR_PTR_OFFSET                       0x138
-#define GAME_SEED_BANK_PTR_OFFSET                    0x144
-#define GAME_MENU_BUTTON_PTR_OFFSET                  0x148
-#define GAME_LAST_STAND_BUTTON_PTR_OFFSET            0x14C
-#define GAME_CARD_SELECTION_UI_PTR_OFFSET            0x15C
-#define GAME_IS_PAUSED_OFFSET                        0x164
-#define GAME_TERRAIN_TYPE_ARRAY_OFFSET               0x168
-#define GAME_ICE_TRAIL_COORD_ARRAY_OFFSET            0x60C
-#define GAME_ICE_TRAIL_COUNTDOWN_ARRAY_OFFSET        0x624
-#define GAME_SPAWN_LIST_OFFSET                       0x6B4
-#define GAME_SPAWN_FLAGS_OFFSET                      0x54D4
-#define GAME_FALLING_SUN_COUNTDOWN_OFFSET            0x5538
-#define GAME_BATTLEFIELD_TYPE_OFFSET                 0x554C
-#define GAME_SUN_VALUE_OFFSET                        0x5560
-#define GAME_TOTAL_WAVE_COUNT_OFFSET                 0x5564
-#define GAME_SPAWNED_WAVE_COUNT_OFFSET               0x557C
-#define GAME_SPAWN_WAVE_HP_THRESHOLD_OFFSET          0x5594
-#define GAME_CURRENT_WAVE_TOTAL_HP_OFFSET            0x5598
-#define GAME_NEXT_WAVE_COUNTDOWN_OFFSET              0x559C
-#define GAME_NEXT_WAVE_INITIAL_COUNTDOWN_OFFSET      0x55A0
-#define GAME_HUGE_WAVE_COUNTDOWN_OFFSET              0x55A0
-#define GAME_HAS_SHOVEL_OFFSET                       0x55F1
-#define GAME_CANNON_DEBOUNCE_COUNTDOWN_OFFSET        0x5754
-#define GAME_CANNON_DEBOUNCE_XPOS_OFFSET             0x5758
-#define GAME_CANNON_DEBOUNCE_YPOS_OFFSET             0x575C
+#define GAME_ZOMBIE_PTR_OFFSET                       0x90 + 0x18
+#define GAME_ZOMBIE_COUNT_OFFSET                     0x94 + 0x18
+#define GAME_PLANT_PTR_OFFSET                        0xAC + 0x18
+#define GAME_PLANT_COUNT_OFFSET                      0xB0 + 0x18
+#define GAME_PLANT_NEXT_OFFSET                       0xB8 + 0x18
+#define GAME_PROJECTILE_PTR_OFFSET                   0xC8 + 0x18
+#define GAME_PROJECTILE_COUNT_OFFSET                 0xCC + 0x18
+#define GAME_FLOATING_ITEM_PTR_OFFSET                0xE4 + 0x18
+#define GAME_FLOATING_ITEM_COUNT_OFFSET              0xE8 + 0x18
+#define GAME_LAWNMOWER_PTR_OFFSET                    0x100 + 0x18
+#define GAME_LAWNMOWER_COUNT_OFFSET                  0x104 + 0x18
+#define GAME_GRID_ITEM_PTR_OFFSET                    0x11C + 0x18
+#define GAME_GRID_ITEM_COUNT_OFFSET                  0x120 + 0x18
+#define GAME_CURSOR_PTR_OFFSET                       0x138 + 0x18
+#define GAME_SEED_BANK_PTR_OFFSET                    0x144 + 0x18
+#define GAME_MENU_BUTTON_PTR_OFFSET                  0x148 + 0x18
+#define GAME_LAST_STAND_BUTTON_PTR_OFFSET            0x14C + 0x18
+#define GAME_CARD_SELECTION_UI_PTR_OFFSET            0x15C + 0x18
+#define GAME_IS_PAUSED_OFFSET                        0x164 + 0x18
+#define GAME_TERRAIN_TYPE_ARRAY_OFFSET               0x168 + 0x18
+#define GAME_ICE_TRAIL_COORD_ARRAY_OFFSET            0x60C + 0x18
+#define GAME_ICE_TRAIL_COUNTDOWN_ARRAY_OFFSET        0x624 + 0x18
+#define GAME_SPAWN_LIST_OFFSET                       0x6B4 + 0x18
+#define GAME_SPAWN_FLAGS_OFFSET                      0x54D4 + 0x18
+#define GAME_FALLING_SUN_COUNTDOWN_OFFSET            0x5538 + 0x18
+#define GAME_BATTLEFIELD_TYPE_OFFSET                 0x554C + 0x18
+#define GAME_SUN_VALUE_OFFSET                        0x5560 + 0x18
+#define GAME_TOTAL_WAVE_COUNT_OFFSET                 0x5564 + 0x18
+#define GAME_SPAWNED_WAVE_COUNT_OFFSET               0x557C + 0x18
+#define GAME_SPAWN_WAVE_HP_THRESHOLD_OFFSET          0x5594 + 0x18
+#define GAME_CURRENT_WAVE_TOTAL_HP_OFFSET            0x5598 + 0x18
+#define GAME_NEXT_WAVE_COUNTDOWN_OFFSET              0x559C + 0x18
+#define GAME_NEXT_WAVE_INITIAL_COUNTDOWN_OFFSET      0x55A0 + 0x18
+#define GAME_HUGE_WAVE_COUNTDOWN_OFFSET              0x55A0 + 0x18
+#define GAME_HAS_SHOVEL_OFFSET                       0x55F1 + 0x18
+#define GAME_CANNON_DEBOUNCE_COUNTDOWN_OFFSET        0x5754 + 0x18
+#define GAME_CANNON_DEBOUNCE_XPOS_OFFSET             0x5758 + 0x18
+#define GAME_CANNON_DEBOUNCE_YPOS_OFFSET             0x575C + 0x18
 
 // Zombie object structure
-#define ZOMBIE_STRUCT_SIZE                           0x15C
+#define ZOMBIE_STRUCT_SIZE                           0x15C + 0xC
 #define ZOMBIE_IS_VISIBLE_OFFSET                     0x18
 #define ZOMBIE_ROW_INDEX_OFFSET                      0x1C
 #define ZOMBIE_TYPE_OFFSET                           0x24
@@ -139,7 +139,7 @@
 #define ZOMBIE_SHIELD_HP_OFFSET                      0xDC
 #define ZOMBIE_BALLOON_HP_OFFSET                     0xE4
 #define ZOMBIE_ANIMATION_ID_OFFSET                   0x118
-#define ZOMBIE_ID_OFFSET                             0x158
+#define ZOMBIE_ID_OFFSET                             0x158 + 0xC
 
 // Plant object structure
 #define PLANT_STRUCT_SIZE                            0x14C
@@ -233,17 +233,17 @@
 #define CARD_SELECTION_UI_IS_ZOMBIE_GENERATED_OFFSET 0x35
 
 // Button object structure
-#define BUTTON_XPOS_OFFSET                           0x8
-#define BUTTON_YPOS_OFFSET                           0xC
-#define BUTTON_WIDTH_OFFSET                          0x10
-#define BUTTON_HEIGHT_OFFSET                         0x14
-#define BUTTON_IS_DISABLED_OFFSET                    0x1A
-#define BUTTON_IS_HIDDEN_OFFSET                      0xF9
+#define BUTTON_XPOS_OFFSET                           0x8 + 0x8
+#define BUTTON_YPOS_OFFSET                           0xC + 0x8
+#define BUTTON_WIDTH_OFFSET                          0x10 + 0x8
+#define BUTTON_HEIGHT_OFFSET                         0x14 + 0x8
+#define BUTTON_IS_DISABLED_OFFSET                    0x1A + 0x8
+#define BUTTON_IS_HIDDEN_OFFSET                      0xF9 + 0x8
 
 // PreGameUI object structure
-#define PRE_GAME_UI_LETS_ROCK_BUTTON_PTR_OFFSET      0x88
-#define PRE_GAME_UI_CARD_ARRAY_OFFSET                0xA4
-#define PRE_GAME_UI_NEXT_SLOT_INDEX_OFFSET           0xD24
+#define PRE_GAME_UI_LETS_ROCK_BUTTON_PTR_OFFSET      0x88 + 0x18
+#define PRE_GAME_UI_CARD_ARRAY_OFFSET                0xA4 + 0x18
+#define PRE_GAME_UI_NEXT_SLOT_INDEX_OFFSET           0xD24 + 0x18
 
 // Card object structure
 #define CARD_STRUCT_SIZE                             0x3C

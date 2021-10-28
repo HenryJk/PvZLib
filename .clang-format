@@ -6,7 +6,7 @@ AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
 AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
-AllowAllArgumentsOnNextLine: true
+AllowAllArgumentsOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: Always
@@ -17,8 +17,6 @@ AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
-BinPackParameters: false
 BreakBeforeBraces: Attach
 BraceWrapping:
   AfterCaseLabel: false

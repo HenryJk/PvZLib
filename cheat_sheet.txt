@@ -1,35 +1,37 @@
-Address         Function                            remarks
-
 VERSION_1_0_0_1051_EN
-0x0040D620      Board::AddProjectile
-0x0041ACF0      Board::Draw
-0x00416880      Board::DrawGameObjects
-0x0041C740      Board::GridToPixelY
-0x0041C950      Board::IteratePlants
-0x0041C8F0      Board::IterateZombies
-0x0041CBF0      Board::KillAllPlantsInRadius        radius hardcoded as 90 in release version
-0x0041D8A0      Board::KillAllZombiesInRadius
-0x004130D0      Board::UpdateGameObjects
-0x004665B0      Plant::BlowAwayFliers
-0x004664B0      Plant::BurnRow
-0x00466D50      Plant::CobCannonFire
-0x004679B0      Plant::Die
-0x00465A90      Plant::Draw
-0x00466E00      Plant::Fire                         Zombie *target (param_2) only used for catapult plants
-0x00466420      Plant::IceZombies
-0x0045DB60      Plant::PlantInitialize
-0x00466650      Plant::KillAllPlantsNearDoom
-0x00462B80      Plant::Squish
-0x0046E000      Projectile::DoImpact
-0x0046D390      Projectile::DoSplashDamage
-0x0046C730      Projectile::ProjectileInitialize
-0x00524C70      Zombie::BungeeStealTarget
-0x00530510      Zombie::DieNoLoot
-0x005302F0      Zombie::DieWithLoot
-0x0052FB40      Zombie::EatPlant
-0x0052FE10      Zombie::EatZombie
-0x005317C0      Zombie::TakeDamage
-0x00528B00      Zombie::PlayZombieReanim
-0x0052E920      Zombie::SquishAllInSquare
-0x0052F250      Zombie::StartEating
-0x00522580      Zombie::ZombieInitialize
+_______________________________________________________________________________________________________________________
+  Address  |              Function                  |          Signature remarks
+-------------------------------------------------------------------------------------------------------------------
+0x0040D620 | Board::AddProjectile                   | Board *this, int32 x, int32 y
+0x00408F40 | Board::AddALadder                      |
+0x0041ACF0 | Board::Draw                            |
+0x00416880 | Board::DrawGameObjects                 |
+0x0041C740 | Board::GridToPixelY                    |
+0x0041C950 | Board::IteratePlants                   |
+0x0041C8F0 | Board::IterateZombies                  |
+0x0041CBF0 | Board::KillAllPlantsInRadius           |    radius hardcoded as 90 in release version
+0x0041D8A0 | Board::KillAllZombiesInRadius          |
+0x004130D0 | Board::UpdateGameObjects               |
+0x004665B0 | Plant::BlowAwayFliers                  |
+0x004664B0 | Plant::BurnRow                         |
+0x00466D50 | Plant::CobCannonFire                   |
+0x004679B0 | Plant::Die                             |
+0x00465A90 | Plant::Draw                            |
+0x00466E00 | Plant::Fire                            |                         Zombie *target (param_2) only used for catapult plants
+0x00466420 | Plant::IceZombies                      |
+0x0045DB60 | Plant::PlantInitialize                 |
+0x00466650 | Plant::KillAllPlantsNearDoom           |
+0x00462B80 | Plant::Squish                          |
+0x0046E000 | Projectile::DoImpact                   |
+0x0046D390 | Projectile::DoSplashDamage             |
+0x0046C730 | Projectile::ProjectileInitialize       |
+0x00524C70 | Zombie::BungeeStealTarget              |
+0x00530510 | Zombie::DieNoLoot                      |
+0x005302F0 | Zombie::DieWithLoot                    |
+0x0052FB40 | Zombie::EatPlant                       |
+0x0052FE10 | Zombie::EatZombie                      |
+0x005317C0 | Zombie::TakeDamage                     |
+0x00528B00 | Zombie::PlayZombieReanim               |
+0x0052E920 | Zombie::SquishAllInSquare              |
+0x0052F250 | Zombie::StartEating                    |
+0x00522580 | Zombie::ZombieInitialize               |

@@ -24,6 +24,8 @@
 
 #if defined VERSION_1_0_0_1051_EN // Original English
 #include "pvz_reference/1_0_0_1051_en.h"
+#elif defined VERSION_1_2_0_1096_EN // Steam English
+#include "pvz_reference/1_2_0_1096_en.h"
 #endif
 
 namespace pvz {
